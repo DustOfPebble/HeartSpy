@@ -1,6 +1,6 @@
 package com.dustcloud.heartspy;
 
-import android.bluetooth.BluetoothAdapter;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.getpebble.android.kit.Constants;
 import com.getpebble.android.kit.PebbleKit;
-import com.getpebble.android.kit.util.PebbleDictionary;
 
 public class SmartWatchManager {
     private WatchReceiver MessageManager;
