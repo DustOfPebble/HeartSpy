@@ -2,7 +2,7 @@ package com.dustcloud.heartspy;
 
 import android.app.Activity;
 import android.os.Bundle;
-
+//ToDo : Make it the main interface
 
 public class StartupSettings extends Activity {
 

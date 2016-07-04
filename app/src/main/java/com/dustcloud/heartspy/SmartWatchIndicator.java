@@ -16,6 +16,8 @@ import java.util.ArrayList;
 
 import static com.dustcloud.heartspy.ToolBox.getScaledBitmap;
 
+//ToDo : remove any related smart watch element after imported to dayly race
+
 public class SmartWatchIndicator extends ImageView{
 
     public int WidthToHeightFactor = 1;

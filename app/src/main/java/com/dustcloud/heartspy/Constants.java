@@ -1,6 +1,6 @@
 package com.dustcloud.heartspy;
 
-
+//ToDo : Remove Uneeded constants and rename it as BluetoothConstant
 public class Constants {
 
     public static final String PACKAGE_IDENTIFIER= "DustCloud.HearthSpy";

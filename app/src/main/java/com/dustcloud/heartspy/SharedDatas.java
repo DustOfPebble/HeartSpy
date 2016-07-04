@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.bluetooth.BluetoothAdapter;
 import android.widget.Toast;
 
+//ToDo : Make it data hub
+//ToDo : Import FileManager, FileWrite, Data record Class
+
 public class SharedDatas extends Application {
 
     SharedPreferences StoredSettings= null;
