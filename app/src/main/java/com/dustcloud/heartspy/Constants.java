@@ -13,4 +13,7 @@ public class Constants {
     public static  final String CHARACTERISTIC_HEART_RATE = "00002a37-0000-1000-8000-00805f9b34fb";
     public static  final String SERVICE_HEART_RATE = "0000180d-0000-1000-8000-00805f9b34fb";
     public static  final String DESCRIPTOR_HEART_RATE = "00002902-0000-1000-8000-00805f9b34fb";
+
+    static public final String FilesWorkingSpace = "Heartbeat.Files";
+    static public final String FilesSignature = ".Heartbeat";
 }

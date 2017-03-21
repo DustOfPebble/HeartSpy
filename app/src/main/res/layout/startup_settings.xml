@@ -15,14 +15,5 @@
         android:paddingBottom="5dp"
         />
 
-    <com.dustcloud.heartspy.SmartWatchExchangeView
-        android:id="@+id/smartwatch_exchange_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        />
 
 </LinearLayout>

@@ -12,9 +12,14 @@ public class HeartRateSensorView extends FrameLayout implements FrequencyUpdated
 
     public int WidthToHeightFactor = 5; // Forcing an AspectRatio of subWidget
 
-    private PulsesIndicator HeartRateGraph=null;
     private BeatIndicator HeartRateIndicator=null;
     private HeartRateSensorData HeartRateProvider;
+
+    private FileManager FilesHandler=null;
+    private FileWriter WriteToFile=null;
+
+    private long StoredStartupTime=0;
+
 
     private int SearchTimeOut = 4000; // 10 secondes TimeOut
     BluetoothDeviceDetector SensorFinder;
@@ -29,13 +34,15 @@ public class HeartRateSensorView extends FrameLayout implements FrequencyUpdated
                 if (Frequency < 0) {
                     HeartRateIndicator.setConnectedState(false);
                     HeartRateIndicator.setHeartRate(0);
-                    HeartRateGraph.setHeartRate(0);
                     HeartRateSensor = null;
                     SensorFinder.findHeartRateSensor();
                 } else {
                     HeartRateIndicator.setConnectedState(true);
                     HeartRateIndicator.setHeartRate(Frequency);
-                    HeartRateGraph.setHeartRate(Frequency);
+                    long TimeNotified = System.currentTimeMillis();
+                    long ElapsedTime = TimeNotified -StoredStartupTime;
+                    String HeartbeatSnapshot= String.valueOf(ElapsedTime)+','+String.valueOf(Frequency);
+                    WriteToFile.appendJSON(HeartbeatSnapshot);
                 }
             }
         });
@@ -74,13 +81,15 @@ public class HeartRateSensorView extends FrameLayout implements FrequencyUpdated
         // Inflate the Layout from XML definition
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.hear_rate_sensor_view, this, true);
-        HeartRateGraph = (PulsesIndicator) findViewById(R.id.pulses_indicator);
-        HeartRateGraph.WidthToHeightFactor = WidthToHeightFactor;
         HeartRateIndicator = (BeatIndicator) findViewById(R.id.beat_indicator);
         HeartRateIndicator.WidthToHeightFactor = WidthToHeightFactor;
 
         HeartRateProvider = new HeartRateSensorData(this, getContext());
         SensorFinder = new BluetoothDeviceDetector(this, SearchTimeOut);
         SensorFinder.findHeartRateSensor();
+
+        WriteToFile = new FileWriter(FilesHandler);
+        StoredStartupTime = System.currentTimeMillis();
+
     }
 }

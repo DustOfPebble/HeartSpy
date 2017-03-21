@@ -10,10 +10,4 @@
         android:layout_gravity="start"
         />
 
-    <com.dustcloud.heartspy.PulsesIndicator  android:id="@+id/pulses_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        />
-
 </FrameLayout>

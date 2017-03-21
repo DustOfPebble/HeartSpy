@@ -12,7 +12,6 @@ public class BluetoothDeviceDetector  {
 
     private BluetoothAdapter Bluetooth;
 
-
     private int TimeOut = 0; // 0 means scanning forever ..
     private Handler TerminateScanning;
     private final Runnable TerminateAction = new Runnable()
