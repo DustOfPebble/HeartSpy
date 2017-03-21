@@ -1,5 +1,6 @@
 package com.dustcloud.heartspy;
 
+import android.app.Application;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Handler;
@@ -88,6 +89,7 @@ public class HeartRateSensorView extends FrameLayout implements FrequencyUpdated
         SensorFinder = new BluetoothDeviceDetector(this, SearchTimeOut);
         SensorFinder.findHeartRateSensor();
 
+        FilesHandler = new FileManager(context);
         WriteToFile = new FileWriter(FilesHandler);
         StoredStartupTime = System.currentTimeMillis();
 

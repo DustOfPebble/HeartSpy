@@ -16,6 +16,7 @@ public class StartupSettings extends Activity {
 
     private HeartRateSensorView HeartRateSensorFrame;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
+    private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 2;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +27,13 @@ public class StartupSettings extends Activity {
             if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
             }
+            if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_EXTERNAL_STORAGE);
+            }
         }
             // Creating View from XML
         setContentView(R.layout.startup_settings);
-            HeartRateSensorFrame = (HeartRateSensorView) findViewById(R.id.heart_rate_sensor_view);
+        HeartRateSensorFrame = (HeartRateSensorView) findViewById(R.id.heart_rate_sensor_view);
     }
 
     @Override
@@ -38,6 +42,11 @@ public class StartupSettings extends Activity {
             case PERMISSION_REQUEST_COARSE_LOCATION: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "coarse location permission granted");
+                }
+            }
+            case PERMISSION_REQUEST_EXTERNAL_STORAGE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "writing external permission granted");
                 }
             }
         }

@@ -30,16 +30,6 @@ public class FileManager {
 
         NameDB = getNowDB();
 
-        // Collect all database from storage directory
-        File Files[] =  Directory.listFiles();
-        Collection = new ArrayList();
-        for (File Item : Files ) {
-            if (!Item.getPath().endsWith(Constants.FilesSignature)) continue;
-            if (!Item.canRead()) continue;
-            Log.d("FileManager", "Found DailyDB file => " + Item.getPath() );
-            Collection.add(Item);
-        }
-
         // Create InUse database
         InUseDB = new File(Directory.getPath(),NameDB);
     }

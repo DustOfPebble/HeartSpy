@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class FileWriter {
     FileManager FilesHandler = null;
     private ArrayList<String> BufferJSON = null;
-    private int WriteLoopWait = 5 * 60000; // Write every 5 minutes
+    private int WriteLoopWait = 1 * 60000; // Write every 5 minutes
     static FileOutputStream Stream = null;
     static BufferedWriter Storage =null;
 
@@ -44,7 +44,7 @@ public class FileWriter {
     public void flushBuffer() {
         if (BufferJSON.size() == 0) return;
         Stream = FilesHandler.getWriteStream();
-        Log.d("FileWriter", "Writing " + BufferJSON.size() + "JSON elements of buffer.");
+        Log.d("FileWriter", "Writing " + BufferJSON.size() + " JSON elements of buffer.");
         try {
             Storage = new BufferedWriter(new OutputStreamWriter(Stream, "UTF-8"));
         } catch (Exception BufferError) {return;}
