@@ -7,31 +7,27 @@ import android.util.Log;
 import java.util.Arrays;
 
 
-public class BluetoothDeviceDetector  {
+public class BluetoothDeviceDetector implements Runnable {
 
     private BluetoothAdapter Bluetooth;
 
     private int TimeOut = 0; // 0 means scanning forever ..
     private Handler TerminateScanning;
-    private final Runnable TerminateAction = new Runnable()
-    {
-        @Override
-        public void run() { AbortBluetoothScanning(); }
-    };
-
-    // Stop scanning ... Could be called from parent Class
-    private void AbortBluetoothScanning() {
-        Bluetooth.stopLeScan(DeviceFound);
-        SensorNotify.SensorFound(null); // ==> Null means TimeOut reached ...
-    }
-
+    private Runnable TerminateAction;
     private SensorCallBacks SensorNotify;
 
     public BluetoothDeviceDetector(SensorCallBacks Callback, int  TimeOut) {
         SensorNotify = Callback;
+        TerminateAction = this;
         TerminateScanning = new Handler();
         this.TimeOut = TimeOut;
         Bluetooth = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    // Stop scanning ...
+    public void run() {
+        Bluetooth.stopLeScan(DeviceFound);
+        SensorNotify.SensorFound(null);
     }
 
     public void findHeartRateSensor(){
