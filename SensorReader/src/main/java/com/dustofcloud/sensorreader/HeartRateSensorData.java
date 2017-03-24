@@ -11,7 +11,7 @@ import android.content.Context;
 
 import java.util.UUID;
 
-public class HeartRateSensorData {
+public class HeartRateSensorData extends BluetoothGattCallback{
 
     private Context ProvidedContext;
 
@@ -21,8 +21,7 @@ public class HeartRateSensorData {
     private BluetoothGattCharacteristic Monitor;
     private BluetoothDevice Sensor;
 
-
-    public HeartRateSensorData(SensorCallBacks Listener, Context ProvidedContext){
+     public HeartRateSensorData(SensorCallBacks Listener, Context ProvidedContext){
 
         SensorListener = Listener;
         Sensor = null;
@@ -32,43 +31,38 @@ public class HeartRateSensorData {
     public void setDevice(BluetoothDevice Sensor){
         if (Sensor == null) return;
         this.Sensor = Sensor;
-        DataProvider = this.Sensor.connectGatt(ProvidedContext,false,GATT_Events);
+        DataProvider = this.Sensor.connectGatt(ProvidedContext,false,this);
     }
 
     //Managing Bluetooth GATT Events ....
-    private final BluetoothGattCallback GATT_Events =
-            new BluetoothGattCallback() {
-                @Override
-                public void onConnectionStateChange(BluetoothGatt GATT_Server, int status, int newState) {
-                    if (newState == BluetoothProfile.STATE_CONNECTED) {
-                        DataProvider.discoverServices();
-                        SensorListener.UpdateFrequency(0);
-                        return;
-                    }
-                    if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                        SensorListener.UpdateFrequency(-1);
-                        return;
-                    }
-                }
+    @Override
+    public void onConnectionStateChange(BluetoothGatt GATT_Server, int status, int newState) {
+        if (newState == BluetoothProfile.STATE_CONNECTED) {
+            DataProvider.discoverServices();
+            SensorListener.UpdateFrequency(0);
+            return;
+        }
+        if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            SensorListener.UpdateFrequency(-1);
+            return;
+        }
+    }
 
-                @Override
-                // New services discovered
-                public void onServicesDiscovered(BluetoothGatt GATT_Server, int status) {
-                    if (status == BluetoothGatt.GATT_SUCCESS) {
+    @Override
+    public void onServicesDiscovered(BluetoothGatt GATT_Server, int status) {
+        if (status == BluetoothGatt.GATT_SUCCESS) {
 
-                        BluetoothGattService GATT_Service = GATT_Server.getService(UUID.fromString(SensorConstants.SERVICE_HEART_RATE));
-                        Monitor = GATT_Service.getCharacteristic(UUID.fromString(SensorConstants.CHARACTERISTIC_HEART_RATE));
-                        GATT_Server.setCharacteristicNotification(Monitor,true);
-                        BluetoothGattDescriptor MonitorSpecs = Monitor.getDescriptor(UUID.fromString(SensorConstants.DESCRIPTOR_HEART_RATE));
-                        MonitorSpecs.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                        GATT_Server.writeDescriptor(MonitorSpecs);
-                    }
-                }
+            BluetoothGattService GATT_Service = GATT_Server.getService(UUID.fromString(SensorConstants.SERVICE_HEART_RATE));
+            Monitor = GATT_Service.getCharacteristic(UUID.fromString(SensorConstants.CHARACTERISTIC_HEART_RATE));
+            GATT_Server.setCharacteristicNotification(Monitor,true);
+            BluetoothGattDescriptor MonitorSpecs = Monitor.getDescriptor(UUID.fromString(SensorConstants.DESCRIPTOR_HEART_RATE));
+            MonitorSpecs.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+            GATT_Server.writeDescriptor(MonitorSpecs);
+        }
+    }
 
-                @Override
-                // Result of a characteristic read operation
-                public void onCharacteristicChanged(BluetoothGatt GATT_Server, BluetoothGattCharacteristic MonitoredValue) {
-                     SensorListener.UpdateFrequency(MonitoredValue.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1));
-                }
-            };
+    @Override
+    public void onCharacteristicChanged(BluetoothGatt GATT_Server, BluetoothGattCharacteristic MonitoredValue) {
+        SensorListener.UpdateFrequency(MonitoredValue.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1));
+    }
 }
