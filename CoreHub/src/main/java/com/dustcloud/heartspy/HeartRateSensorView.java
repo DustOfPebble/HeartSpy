@@ -55,7 +55,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorCallBacks 
 
     // CallBack on Bluetooth Device detection
     @Override
-    public void HeartRateSensorFound(BluetoothDevice DiscoveredHeartRateSensor){
+    public void SensorFound(BluetoothDevice DiscoveredHeartRateSensor){
         if (DiscoveredHeartRateSensor == null) { // We have reach a TimeOut ...
             if (HeartRateSensor == null) {
                 SensorFinder.findHeartRateSensor(); // No Device found --> Continue to search

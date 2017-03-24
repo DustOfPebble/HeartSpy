@@ -51,7 +51,7 @@ public class HeartRateSensorData extends BluetoothGattCallback{
     @Override
     public void onServicesDiscovered(BluetoothGatt GATT_Server, int status) {
         if (status == BluetoothGatt.GATT_SUCCESS) {
-
+            // Suscribe to Heartbeat change events
             BluetoothGattService GATT_Service = GATT_Server.getService(UUID.fromString(SensorConstants.SERVICE_HEART_RATE));
             Monitor = GATT_Service.getCharacteristic(UUID.fromString(SensorConstants.CHARACTERISTIC_HEART_RATE));
             GATT_Server.setCharacteristicNotification(Monitor,true);

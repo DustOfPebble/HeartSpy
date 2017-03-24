@@ -22,7 +22,7 @@ public class BluetoothDeviceDetector  {
     // Stop scanning ... Could be called from parent Class
     private void AbortBluetoothScanning() {
         Bluetooth.stopLeScan(DeviceFound);
-        SensorNotify.HeartRateSensorFound(null); // ==> Null means TimeOut reached ...
+        SensorNotify.SensorFound(null); // ==> Null means TimeOut reached ...
     }
 
     private SensorCallBacks SensorNotify;
@@ -61,7 +61,7 @@ public class BluetoothDeviceDetector  {
                     Log.d("UUID", UUID);
                     if (SensorConstants.UUID_HEART_RATE.equals(UUID)) {
                         Log.d("Bluetooth ====>", "Device found");
-                        SensorNotify.HeartRateSensorFound(DeviceFound);
+                        SensorNotify.SensorFound(DeviceFound);
                         break;
                     }
                 }
