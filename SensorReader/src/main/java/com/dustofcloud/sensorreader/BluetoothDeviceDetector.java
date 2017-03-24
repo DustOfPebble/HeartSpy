@@ -1,4 +1,4 @@
-package com.dustcloud.heartspy;
+package com.dustofcloud.sensorreader;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -26,9 +26,9 @@ public class BluetoothDeviceDetector  {
         SensorNotify.HeartRateSensorFound(null); // ==> Null means TimeOut reached ...
     }
 
-    private SensorsFoundCallBack SensorNotify;
+    private SensorCallBacks SensorNotify;
 
-    public BluetoothDeviceDetector(SensorsFoundCallBack Callback,int  TimeOut) {
+    public BluetoothDeviceDetector(SensorCallBacks Callback, int  TimeOut) {
         SensorNotify = Callback;
         TerminateScanning = new Handler();
         this.TimeOut = TimeOut;
@@ -54,13 +54,13 @@ public class BluetoothDeviceDetector  {
                 int type = scanRecord[index];
                 if (type == 0) break; //Done if our record isn't a valid type
 
-                if (type == Constants.TYPE_UUID16) {
+                if (type == SensorConstants.TYPE_UUID16) {
                     byte[] data = Arrays.copyOfRange(scanRecord, index + 1, index + length);
                     int uuid = (data[1] & 0xFF) << 8;
                     uuid += (data[0] & 0xFF);
                     String UUID = Integer.toHexString(uuid);
                     Log.d("UUID", UUID);
-                    if (Constants.UUID_HEART_RATE.equals(UUID)) {
+                    if (SensorConstants.UUID_HEART_RATE.equals(UUID)) {
                         Log.d("Bluetooth ====>", "Device found");
                         SensorNotify.HeartRateSensorFound(DeviceFound);
                         break;

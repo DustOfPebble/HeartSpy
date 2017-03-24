@@ -1,6 +1,5 @@
 package com.dustcloud.heartspy;
 
-import android.app.Application;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Handler;
@@ -9,7 +8,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
-public class HeartRateSensorView extends FrameLayout implements FrequencyUpdatedCallBack,SensorsFoundCallBack {
+import com.dustofcloud.sensorreader.BluetoothDeviceDetector;
+import com.dustofcloud.sensorreader.HeartRateSensorData;
+import com.dustofcloud.sensorreader.SensorCallBacks;
+
+
+public class HeartRateSensorView extends FrameLayout implements SensorCallBacks {
 
     public int WidthToHeightFactor = 5; // Forcing an AspectRatio of subWidget
 
