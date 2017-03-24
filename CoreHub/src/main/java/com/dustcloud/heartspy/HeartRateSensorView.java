@@ -26,7 +26,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorCallBacks 
     private long StoredStartupTime=0;
 
 
-    private int SearchTimeOut = 4000; // 10 secondes TimeOut
+    private int SearchTimeOut = 4000; // in ms TimeOut
     BluetoothDeviceDetector SensorFinder;
     BluetoothDevice HeartRateSensor;
 

@@ -13,7 +13,6 @@ import java.util.UUID;
 
 public class HeartRateSensorData {
 
-    final private String TAG = "GATT Event --->";
     private Context ProvidedContext;
 
     private SensorCallBacks SensorListener;
@@ -72,4 +71,4 @@ public class HeartRateSensorData {
                      SensorListener.UpdateFrequency(MonitoredValue.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1));
                 }
             };
-};
+}
