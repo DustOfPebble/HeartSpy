@@ -1,6 +1,5 @@
 package com.dustofcloud.smartwatch;
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
