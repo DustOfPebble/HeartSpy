@@ -1,1 +1,1 @@
-include ':CoreHub', ':SensorReader'
+include ':CoreHub', ':SensorReader', ':PebbleLib', ':Smartwatch'

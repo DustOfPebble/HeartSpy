@@ -10,7 +10,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/CoreHub" />
+            <option value="$PROJECT_DIR$/PebbleLib" />
             <option value="$PROJECT_DIR$/SensorReader" />
+            <option value="$PROJECT_DIR$/Smartwatch" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
