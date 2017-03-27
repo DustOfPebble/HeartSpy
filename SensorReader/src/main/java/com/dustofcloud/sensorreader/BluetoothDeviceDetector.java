@@ -43,7 +43,7 @@ public class BluetoothDeviceDetector extends ScanCallback implements Runnable {
 
     @Override
     public void onScanResult(int callbackType, ScanResult Infos) {
-        byte[] Properties = Infos.getScanRecord().getBytes();
+/*        byte[] Properties = Infos.getScanRecord().getBytes();
         int index = 0;
         while (index < Properties.length) {
 
@@ -67,6 +67,10 @@ public class BluetoothDeviceDetector extends ScanCallback implements Runnable {
             }
             index += length;
         }
+*/
+        BluetoothDevice SensorDevice = Infos.getDevice();
+        if (SensorDevice != null ) SensorNotify.SensorFound(Infos.getDevice());
+
     }
 
     @Override
@@ -78,5 +82,6 @@ public class BluetoothDeviceDetector extends ScanCallback implements Runnable {
     public void onScanFailed(int errorCode) {
         SensorNotify.SensorFound(null);
     }
+
 }
 
