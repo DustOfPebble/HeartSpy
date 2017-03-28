@@ -9,38 +9,25 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 
-//import java.util.UUID;
+public class SensorManager extends BluetoothGattCallback{
 
-public class HeartRateSensorData extends BluetoothGattCallback{
-
-    private Context ProvidedContext;
-
+    private Context SavedContext;
     private SensorEvents SensorListener;
 
-//    private BluetoothGatt DataProvider;
-//    private BluetoothGattCharacteristic Monitor;
-//    private BluetoothDevice Sensor;
-
-     public HeartRateSensorData(SensorEvents Listener, Context ProvidedContext){
-
+    public SensorManager(SensorEvents Listener, Context context){
         SensorListener = Listener;
- //       Sensor = null;
-        this.ProvidedContext = ProvidedContext;
+        this.SavedContext = context;
     }
 
     public void setDevice(BluetoothDevice Sensor){
         if (Sensor == null) return;
-//      this.Sensor = Sensor;
-//      DataProvider = this.Sensor.connectGatt(ProvidedContext,false,this);
-        Sensor.connectGatt(ProvidedContext,false,this);
+        Sensor.connectGatt(SavedContext,false,this);
     }
 
-    //Managing Bluetooth GATT Events ....
     @Override
-    public void onConnectionStateChange(BluetoothGatt GATT_Server, int status, int newState) {
+    public void onConnectionStateChange(BluetoothGatt DeviceServer, int status, int newState) {
         if (newState == BluetoothProfile.STATE_CONNECTED) {
-//            DataProvider.discoverServices();
-            GATT_Server.discoverServices();
+            DeviceServer.discoverServices();
             SensorListener.UpdateFrequency(0);
             return;
         }
@@ -51,23 +38,20 @@ public class HeartRateSensorData extends BluetoothGattCallback{
     }
 
     @Override
-    public void onServicesDiscovered(BluetoothGatt GATT_Server, int status) {
+    public void onServicesDiscovered(BluetoothGatt DeviceServer, int status) {
         if (status == BluetoothGatt.GATT_SUCCESS) {
-//            BluetoothGattService GATT_Service = GATT_Server.getService(UUID.fromString(SensorConstants.SERVICE_HEART_RATE));
-//            Monitor = GATT_Service.getCharacteristic(UUID.fromString(SensorConstants.CHARACTERISTIC_HEART_RATE));
-            BluetoothGattService GATT_Service = GATT_Server.getService(SensorConstants.SERVICE_HEART_RATE);
+            BluetoothGattService GATT_Service = DeviceServer.getService(SensorConstants.SERVICE_HEART_RATE);
             if ( GATT_Service == null ) {
-                GATT_Server.disconnect();
+                DeviceServer.disconnect();
                 return;
             }
 
             BluetoothGattCharacteristic Monitor = GATT_Service.getCharacteristic(SensorConstants.CHARACTERISTIC_HEART_RATE);
-            GATT_Server.setCharacteristicNotification(Monitor,true);
-//            BluetoothGattDescriptor MonitorSpecs = Monitor.getDescriptor(UUID.fromString(SensorConstants.DESCRIPTOR_HEART_RATE));
+            DeviceServer.setCharacteristicNotification(Monitor,true);
 
             BluetoothGattDescriptor MonitorSpecs = Monitor.getDescriptor(SensorConstants.DESCRIPTOR_HEART_RATE);
             MonitorSpecs.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            GATT_Server.writeDescriptor(MonitorSpecs);
+            DeviceServer.writeDescriptor(MonitorSpecs);
         }
     }
 

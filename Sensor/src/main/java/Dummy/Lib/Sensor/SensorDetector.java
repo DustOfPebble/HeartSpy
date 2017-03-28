@@ -10,7 +10,7 @@ import android.os.Handler;
 
 import java.util.List;
 
-public class BluetoothDeviceDetector extends ScanCallback implements Runnable {
+public class SensorDetector extends ScanCallback implements Runnable {
 
     private int TimeOut = 0; // 0 means scanning forever ..
     private Handler TerminateScanning;
@@ -18,7 +18,7 @@ public class BluetoothDeviceDetector extends ScanCallback implements Runnable {
     private SensorEvents SensorNotify;
     private BluetoothLeScanner DeviceScanner;
 
-    public BluetoothDeviceDetector(SensorEvents Callback, int  TimeOut) {
+    public SensorDetector(SensorEvents Callback, int  TimeOut) {
         SensorNotify = Callback;
         TerminateAction = this;
         TerminateScanning = new Handler();

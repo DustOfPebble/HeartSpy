@@ -8,8 +8,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
-import Dummy.Lib.Sensor.BluetoothDeviceDetector;
-import Dummy.Lib.Sensor.HeartRateSensorData;
+import Dummy.Lib.Sensor.SensorDetector;
+import Dummy.Lib.Sensor.SensorManager;
 import Dummy.Lib.Sensor.SensorEvents;
 
 
@@ -18,7 +18,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
     public int WidthToHeightFactor = 5; // Forcing an AspectRatio of subWidget
 
     private BeatIndicator HeartRateIndicator=null;
-    private HeartRateSensorData HeartRateProvider;
+    private SensorManager HeartRateProvider;
 
     private FileManager FilesHandler=null;
     private FileWriter WriteToFile=null;
@@ -27,7 +27,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
 
 
     private int SearchTimeOut = 4000; // in ms TimeOut
-    BluetoothDeviceDetector SensorFinder;
+    SensorDetector SensorFinder;
     BluetoothDevice HeartRateSensor;
 
     // CallBack on Frequency Update
@@ -89,8 +89,8 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
         HeartRateIndicator = (BeatIndicator) findViewById(R.id.beat_indicator);
         HeartRateIndicator.WidthToHeightFactor = WidthToHeightFactor;
 
-        HeartRateProvider = new HeartRateSensorData(this, getContext());
-        SensorFinder = new BluetoothDeviceDetector(this, SearchTimeOut);
+        HeartRateProvider = new SensorManager(this, getContext());
+        SensorFinder = new SensorDetector(this, SearchTimeOut);
         SensorFinder.findHeartRateSensor();
 
         FilesHandler = new FileManager(context);
