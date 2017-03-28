@@ -12,12 +12,15 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-public class BeatIndicator extends ImageView{
+public class BeatIndicator extends ImageView implements Handler.Callback {
 
+    public Handler ViewUpdater =null;
     public int WidthToHeightFactor = 1;
 
     private Bitmap Sensor_NotConnected_Background;
@@ -44,6 +47,8 @@ public class BeatIndicator extends ImageView{
         super(context, attrs);
         this.setAdjustViewBounds(true);
 
+        ViewUpdater = new Handler(this);
+
         ShaderPainter = new Paint();
         ImageScaler = new Matrix();
         ScaleAnimation = new AnimatorSet();
@@ -52,7 +57,6 @@ public class BeatIndicator extends ImageView{
         TextPainter.setTextAlign(Paint.Align.CENTER);
         TextPainter.setColor(Color.parseColor("#aaccffff"));
         TextPainter.setTypeface(Typeface.DEFAULT_BOLD);
-
     }
 
     public void setHeartRate(int Frequency){
@@ -63,7 +67,7 @@ public class BeatIndicator extends ImageView{
     public void setConnectedState(Boolean Connected){
         this.Connected = Connected;
         invalidate();
-        }
+    }
 
     public void setScaleFactor(float ScaleFactor) {
         this.ScaleFactor = ScaleFactor;
@@ -83,7 +87,6 @@ public class BeatIndicator extends ImageView{
     }
 
     void LoadShader() { // Creating shader for Heart Scaling Animation ...
-
         if (Sensor_Heart_Pulsing == null) return;
         ShaderImage = new BitmapShader(Sensor_Heart_Pulsing, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         ShaderPainter.setShader(ShaderImage);
@@ -116,25 +119,36 @@ public class BeatIndicator extends ImageView{
 
     @Override
     protected void onDraw(Canvas canvas) {
-            if (Connected) {
-                // Draw image Background
-                canvas.drawBitmap(Sensor_Connected_Background, 0f, 0f, null);
+        if (Connected) {
+            // Draw image Background
+            canvas.drawBitmap(Sensor_Connected_Background, 0f, 0f, null);
 
-                // Draw Heart with scaling effect
-                ShaderImage.getLocalMatrix(ImageScaler);
-                ImageScaler.setScale(ScaleFactor, ScaleFactor, canvas.getWidth() / 2, canvas.getHeight() / 2);
-                ShaderImage.setLocalMatrix(ImageScaler);
-                canvas.drawPaint(ShaderPainter);
+            // Draw Heart with scaling effect
+            ShaderImage.getLocalMatrix(ImageScaler);
+            ImageScaler.setScale(ScaleFactor, ScaleFactor, canvas.getWidth() / 2, canvas.getHeight() / 2);
+            ShaderImage.setLocalMatrix(ImageScaler);
+            canvas.drawPaint(ShaderPainter);
 
-                // Write Heart Rate ...
-                canvas.drawText(Integer.toString(Frequency),canvas.getWidth() / 2, canvas.getHeight() / 2 ,TextPainter);
+            // Write Heart Rate ...
+            canvas.drawText(Integer.toString(Frequency),canvas.getWidth() / 2, canvas.getHeight() / 2 ,TextPainter);
 
-            } else {
-                canvas.drawBitmap(Sensor_NotConnected_Background, 0f, 0f, null);
-            }
+        } else {
+            canvas.drawBitmap(Sensor_NotConnected_Background, 0f, 0f, null);
+        }
         super.onDraw(canvas);
     }
 
-
+    @Override
+    public boolean handleMessage(Message Informations) {
+        int Frequency = Informations.getData().getInt(Constants.Frequency);
+        if (Frequency < 0) {
+            setConnectedState(false);
+            setHeartRate(0);
+        } else {
+            setConnectedState(true);
+            setHeartRate(Frequency);
+        }
+        return true;
+    }
 }
 

@@ -2,8 +2,8 @@ package Dummy.Core.HeartSpy;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
+import android.os.Bundle;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
 import Dummy.Lib.Sensor.SensorDetector;
 import Dummy.Lib.Sensor.SensorManager;
 import Dummy.Lib.Sensor.SensorEvents;
-
 
 public class HeartRateSensorView extends FrameLayout implements SensorEvents {
 
@@ -25,32 +24,24 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
 
     private long StoredStartupTime=0;
 
-
     private int SearchTimeOut = 4000; // in ms TimeOut
     SensorDetector SensorFinder;
     BluetoothDevice HeartRateSensor;
 
     // CallBack on Frequency Update
     @Override
-    public void UpdateFrequency(final int Frequency) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (Frequency < 0) {
-                    HeartRateIndicator.setConnectedState(false);
-                    HeartRateIndicator.setHeartRate(0);
-                    HeartRateSensor = null;
-                    SensorFinder.findHeartRateSensor();
-                } else {
-                    HeartRateIndicator.setConnectedState(true);
-                    HeartRateIndicator.setHeartRate(Frequency);
-                    long TimeNotified = System.currentTimeMillis();
-                    long ElapsedTime = TimeNotified -StoredStartupTime;
-                    String HeartbeatSnapshot= String.valueOf(ElapsedTime)+','+String.valueOf(Frequency);
-                    WriteToFile.appendJSON(HeartbeatSnapshot);
-                }
-            }
-        });
+    public void UpdateFrequency(int Frequency) {
+        if (Frequency > 0) {
+            long TimeNotified = System.currentTimeMillis();
+            long ElapsedTime = TimeNotified -StoredStartupTime;
+            String Snapshot= String.valueOf(ElapsedTime)+','+String.valueOf(Frequency);
+            WriteToFile.appendJSON(Snapshot);
+        }
+        Message Informations = new Message();
+        Bundle Table = new Bundle();
+        Table.putInt(Constants.Frequency, Frequency);
+        Informations.setData(Table);
+        HeartRateIndicator.ViewUpdater.sendMessage(Informations);
     }
 
     // CallBack on Bluetooth Device detection
@@ -63,9 +54,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
                 HeartRateProvider.setDevice(HeartRateSensor);
             }
         } else { HeartRateSensor = DiscoveredHeartRateSensor; }
-
     }
-
 
     // Default constructor (Seems to be Not mandatory)
     public HeartRateSensorView(Context context)
@@ -74,7 +63,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
         initObjects(context);
     }
 
-    // Atenative constructor (Seems to effectively Called) --> Crash without !
+    // Alternative constructor (Seems to effectively Called) --> Crash without !
     public HeartRateSensorView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
@@ -96,6 +85,5 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
         FilesHandler = new FileManager(context);
         WriteToFile = new FileWriter(FilesHandler);
         StoredStartupTime = System.currentTimeMillis();
-
     }
 }
