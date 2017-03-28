@@ -11,7 +11,6 @@ import static android.content.ContentValues.TAG;
 
 public class StartupSettings extends Activity {
 
-    private HeartRateSensorView HeartRateSensorFrame;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 2;
 
@@ -27,9 +26,8 @@ public class StartupSettings extends Activity {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_EXTERNAL_STORAGE);
             }
         }
-            // Creating View from XML
         setContentView(R.layout.startup_settings);
-        HeartRateSensorFrame = (HeartRateSensorView) findViewById(R.id.heart_rate_sensor_view);
+        findViewById(R.id.heart_rate_sensor_view);
     }
 
     @Override

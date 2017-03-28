@@ -3,9 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion '25.0.0'
-
     defaultConfig {
-        applicationId "com.Core.heartspy"
+        applicationId 'Dummy.Core.HeartSpy'
         minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
@@ -17,9 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
     compile project(':Sensor')
-    compile project(':Smartwatch')
 }
