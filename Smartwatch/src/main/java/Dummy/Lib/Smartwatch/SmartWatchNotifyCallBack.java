@@ -1,4 +1,4 @@
-package Dummy.Lib.Smartwatch;
+package dummy.lib.Smartwatch;
 
 public interface SmartWatchNotifyCallBack {
         void BlocksReceived(int NbBlocks);

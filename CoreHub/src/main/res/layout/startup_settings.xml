@@ -5,7 +5,7 @@
     android:orientation="vertical"
     >
 
-    <Dummy.Core.HeartSpy.HeartRateSensorView
+    <dummy.core.heartspy.HeartRateSensorView
         android:id="@+id/heart_rate_sensor_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
