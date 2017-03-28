@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
+import android.util.Log;
 
 public class SensorManager extends BluetoothGattCallback{
 
@@ -40,9 +41,11 @@ public class SensorManager extends BluetoothGattCallback{
     @Override
     public void onServicesDiscovered(BluetoothGatt DeviceServer, int status) {
         if (status == BluetoothGatt.GATT_SUCCESS) {
+            Log.d("Sensor", "Connected");
             BluetoothGattService DeviceService = DeviceServer.getService(SensorConstants.SERVICE_HEART_RATE);
             if ( DeviceService == null ) {
                 DeviceServer.disconnect();
+                Log.d("Sensor", "Disconnecting");
                 return;
             }
 
@@ -53,10 +56,12 @@ public class SensorManager extends BluetoothGattCallback{
             MonitorSpecs.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             DeviceServer.writeDescriptor(MonitorSpecs);
         }
+        Log.d("Sensor", "Service discovered");
     }
 
     @Override
     public void onCharacteristicChanged(BluetoothGatt DeviceServer, BluetoothGattCharacteristic MonitoredValue) {
         SensorListener.UpdateFrequency(MonitoredValue.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1));
+        Log.d("Sensor", "Updating");
     }
 }
