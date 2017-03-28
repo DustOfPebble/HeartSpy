@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     >
 
-    <com.dustcloud.heartspy.BeatIndicator android:id="@+id/beat_indicator"
+    <Dummy.Core.HeartSpy.BeatIndicator
+        android:id="@+id/beat_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"

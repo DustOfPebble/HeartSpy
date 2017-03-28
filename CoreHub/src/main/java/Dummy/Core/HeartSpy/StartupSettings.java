@@ -1,4 +1,4 @@
-package com.dustcloud.heartspy;
+package Dummy.Core.HeartSpy;
 
 import android.Manifest;
 import android.app.Activity;
@@ -8,14 +8,12 @@ import android.os.Bundle;
 import android.util.Log;
 
 import static android.content.ContentValues.TAG;
-//ToDo : Make it the main interface
 
 public class StartupSettings extends Activity {
 
     private HeartRateSensorView HeartRateSensorFrame;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 2;
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

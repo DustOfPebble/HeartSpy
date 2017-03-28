@@ -1,4 +1,4 @@
-package com.dustofcloud.sensorreader;
+package Dummy.Lib.Sensor;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -15,13 +15,13 @@ public class HeartRateSensorData extends BluetoothGattCallback{
 
     private Context ProvidedContext;
 
-    private SensorCallBacks SensorListener;
+    private SensorEvents SensorListener;
 
 //    private BluetoothGatt DataProvider;
 //    private BluetoothGattCharacteristic Monitor;
 //    private BluetoothDevice Sensor;
 
-     public HeartRateSensorData(SensorCallBacks Listener, Context ProvidedContext){
+     public HeartRateSensorData(SensorEvents Listener, Context ProvidedContext){
 
         SensorListener = Listener;
  //       Sensor = null;

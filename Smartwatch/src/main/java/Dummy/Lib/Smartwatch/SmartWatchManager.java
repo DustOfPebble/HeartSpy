@@ -1,4 +1,4 @@
-package com.dustofcloud.smartwatch;
+package Dummy.Lib.Smartwatch;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

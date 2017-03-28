@@ -1,4 +1,4 @@
-package com.dustcloud.heartspy;
+package Dummy.Core.HeartSpy;
 
 public class Constants {
 

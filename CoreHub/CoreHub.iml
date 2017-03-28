@@ -94,7 +94,7 @@
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="PebbleLib-unspecified" level="project" />
-    <orderEntry type="module" module-name="SensorReader" exported="" />
     <orderEntry type="module" module-name="Smartwatch" exported="" />
+    <orderEntry type="module" module-name="Sensor" exported="" />
   </component>
 </module>

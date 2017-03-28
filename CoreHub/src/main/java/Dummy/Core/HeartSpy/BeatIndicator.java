@@ -1,4 +1,4 @@
-package com.dustcloud.heartspy;
+package Dummy.Core.HeartSpy;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -13,12 +13,8 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-
-
-import static com.dustcloud.heartspy.ToolBox.getScaledBitmap;
 
 public class BeatIndicator extends ImageView{
 
@@ -81,9 +77,9 @@ public class BeatIndicator extends ImageView{
         StoredHeight = Height;
         StoredWidth = Width;
         Resources EmbeddedDatas = getContext().getResources();
-        Sensor_NotConnected_Background = getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.sensor_not_connected);
-        Sensor_Connected_Background = getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.sensor_connected);
-        Sensor_Heart_Pulsing = getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.heart_pulsing);
+        Sensor_NotConnected_Background = ToolBox.getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.sensor_not_connected);
+        Sensor_Connected_Background = ToolBox.getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.sensor_connected);
+        Sensor_Heart_Pulsing = ToolBox.getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.heart_pulsing);
     }
 
     void LoadShader() { // Creating shader for Heart Scaling Animation ...

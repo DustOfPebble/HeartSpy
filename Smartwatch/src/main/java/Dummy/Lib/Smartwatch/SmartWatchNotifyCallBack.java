@@ -1,4 +1,4 @@
-package com.dustofcloud.smartwatch;
+package Dummy.Lib.Smartwatch;
 
 public interface SmartWatchNotifyCallBack {
         void BlocksReceived(int NbBlocks);

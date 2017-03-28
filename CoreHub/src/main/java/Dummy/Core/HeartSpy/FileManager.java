@@ -1,4 +1,4 @@
-package com.dustcloud.heartspy;
+package Dummy.Core.HeartSpy;
 
 import android.content.Context;
 import android.os.Environment;

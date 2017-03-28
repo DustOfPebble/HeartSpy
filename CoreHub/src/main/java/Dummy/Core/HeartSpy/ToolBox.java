@@ -1,9 +1,8 @@
-package com.dustcloud.heartspy;
+package Dummy.Core.HeartSpy;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 
 public class ToolBox {

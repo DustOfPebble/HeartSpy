@@ -5,7 +5,7 @@ android {
     buildToolsVersion '25.0.0'
 
     defaultConfig {
-        applicationId "com.dustcloud.heartspy"
+        applicationId "com.Core.heartspy"
         minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
@@ -20,6 +20,6 @@ android {
 }
 
 dependencies {
-    compile project(':SensorReader')
+    compile project(':Sensor')
     compile project(':Smartwatch')
 }

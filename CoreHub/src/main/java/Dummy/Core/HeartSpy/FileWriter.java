@@ -1,13 +1,10 @@
-package com.dustcloud.heartspy;
+package Dummy.Core.HeartSpy;
 
 import android.os.Handler;
 import android.util.Log;
 
-import com.dustcloud.heartspy.FileManager;
-
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 //ToDo: check about number of record on exit if we need to write file (Avoid empty files).
