@@ -40,13 +40,13 @@ public class SensorManager extends BluetoothGattCallback{
     @Override
     public void onServicesDiscovered(BluetoothGatt DeviceServer, int status) {
         if (status == BluetoothGatt.GATT_SUCCESS) {
-            BluetoothGattService GATT_Service = DeviceServer.getService(SensorConstants.SERVICE_HEART_RATE);
-            if ( GATT_Service == null ) {
+            BluetoothGattService DeviceService = DeviceServer.getService(SensorConstants.SERVICE_HEART_RATE);
+            if ( DeviceService == null ) {
                 DeviceServer.disconnect();
                 return;
             }
 
-            BluetoothGattCharacteristic Monitor = GATT_Service.getCharacteristic(SensorConstants.CHARACTERISTIC_HEART_RATE);
+            BluetoothGattCharacteristic Monitor = DeviceService.getCharacteristic(SensorConstants.CHARACTERISTIC_HEART_RATE);
             DeviceServer.setCharacteristicNotification(Monitor,true);
 
             BluetoothGattDescriptor MonitorSpecs = Monitor.getDescriptor(SensorConstants.DESCRIPTOR_HEART_RATE);
@@ -56,7 +56,7 @@ public class SensorManager extends BluetoothGattCallback{
     }
 
     @Override
-    public void onCharacteristicChanged(BluetoothGatt GATT_Server, BluetoothGattCharacteristic MonitoredValue) {
+    public void onCharacteristicChanged(BluetoothGatt DeviceServer, BluetoothGattCharacteristic MonitoredValue) {
         SensorListener.UpdateFrequency(MonitoredValue.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1));
     }
 }
