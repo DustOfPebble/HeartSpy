@@ -3,7 +3,10 @@ package dummy.lib.sensor;
 import android.bluetooth.BluetoothDevice;
 
 public interface SensorEvents {
-        void SensorFound(BluetoothDevice Sensor);
-        void UpdateFrequency(int Frequency);
+    void Detected(BluetoothDevice Sensor);
+    void Failed();
+    void Removed();
+    void Updated(int Frequency);
+    void Selected();
 }
 

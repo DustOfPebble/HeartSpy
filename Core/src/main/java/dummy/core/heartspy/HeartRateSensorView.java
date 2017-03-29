@@ -16,45 +16,46 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
 
     public int WidthToHeightFactor = 5; // Forcing an AspectRatio of subWidget
 
-    private BeatIndicator HeartRateIndicator=null;
-    private SensorManager HeartRateProvider;
+    private BeatIndicator VisualIndicator = null;
+    private SensorManager SensorListener = null;
+    private SensorDetector SensorFinder = null;
 
-    private FileManager FilesHandler=null;
-    private FileWriter WriteToFile=null;
+    private FileManager FilesHandler = null;
+    private FileWriter LogWriter = null;
 
     private long StoredStartupTime=0;
+    private int SearchTimeOut = 10000; // in ms TimeOut
 
-    private int SearchTimeOut = 4000; // in ms TimeOut
-    SensorDetector SensorFinder;
-    BluetoothDevice HeartRateSensor;
-
-    // CallBack on Frequency Update
+    // CallBack on Frequency Updated
     @Override
-    public void UpdateFrequency(int Frequency) {
+    public void Updated(int Frequency) {
         if (Frequency > 0) {
             long TimeNotified = System.currentTimeMillis();
             long ElapsedTime = TimeNotified -StoredStartupTime;
             String Snapshot= String.valueOf(ElapsedTime)+','+String.valueOf(Frequency);
-            WriteToFile.appendJSON(Snapshot);
+            LogWriter.appendJSON(Snapshot);
         }
         Message Informations = new Message();
         Bundle Table = new Bundle();
         Table.putInt(Constants.Frequency, Frequency);
         Informations.setData(Table);
-        HeartRateIndicator.ViewUpdater.sendMessage(Informations);
+        VisualIndicator.ViewUpdater.sendMessage(Informations);
     }
 
     // CallBack on Bluetooth Device detection
     @Override
-    public void SensorFound(BluetoothDevice DiscoveredHeartRateSensor){
-        if (DiscoveredHeartRateSensor == null) { // We have reach a TimeOut ...
-            if (HeartRateSensor == null) {
-                SensorFinder.findHeartRateSensor(); // No Device found --> Continue to search
-            } else {
-                HeartRateProvider.setDevice(HeartRateSensor);
-            }
-        } else { HeartRateSensor = DiscoveredHeartRateSensor; }
+    public void Detected(BluetoothDevice DiscoveredSensor){
+        if (DiscoveredSensor == null) return;
+        SensorListener.checkDevice(DiscoveredSensor);
     }
+    @Override
+    public void Selected(){ SensorFinder.stopSearch(); }
+
+    @Override
+    public void Failed(){ SensorFinder.startSearch(); }
+
+    @Override
+    public void Removed(){ SensorFinder.startSearch(); }
 
     // Default constructor (Seems to be Not mandatory)
     public HeartRateSensorView(Context context)
@@ -75,15 +76,15 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
         // Inflate the Layout from XML definition
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.hear_rate_sensor_view, this, true);
-        HeartRateIndicator = (BeatIndicator) findViewById(R.id.beat_indicator);
-        HeartRateIndicator.WidthToHeightFactor = WidthToHeightFactor;
+        VisualIndicator = (BeatIndicator) findViewById(R.id.beat_indicator);
+        VisualIndicator.WidthToHeightFactor = WidthToHeightFactor;
 
-        HeartRateProvider = new SensorManager(this, getContext());
+        SensorListener = new SensorManager(this, getContext());
         SensorFinder = new SensorDetector(this, SearchTimeOut);
-        SensorFinder.findHeartRateSensor();
+        SensorFinder.startSearch();
 
         FilesHandler = new FileManager(context);
-        WriteToFile = new FileWriter(FilesHandler);
+        LogWriter = new FileWriter(FilesHandler);
         StoredStartupTime = System.currentTimeMillis();
     }
 }

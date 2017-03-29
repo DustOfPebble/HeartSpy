@@ -13,6 +13,7 @@ public class StartupSettings extends Activity {
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 2;
+    private static final int PERMISSION_REQUEST_IGNORE_BATTERY_SAVING = 3;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +26,9 @@ public class StartupSettings extends Activity {
             if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_EXTERNAL_STORAGE);
             }
+            if (this.checkSelfPermission(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS}, PERMISSION_REQUEST_IGNORE_BATTERY_SAVING);
+            }
         }
         setContentView(R.layout.startup_settings);
         findViewById(R.id.heart_rate_sensor_view);
@@ -32,15 +36,23 @@ public class StartupSettings extends Activity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (grantResults == null) { Log.d("Startup:", "Granted Permissions is undefined"); return;}
+        if (grantResults.length == 0) { Log.d("Startup:", "Granted Permissions empty"); return;}
+
         switch (requestCode) {
             case PERMISSION_REQUEST_COARSE_LOCATION: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "coarse location permission granted");
+                    Log.d(TAG, "<REQUEST_IGNORE_BATTERY_OPTIMIZATIONS> permission granted");
                 }
             }
             case PERMISSION_REQUEST_EXTERNAL_STORAGE: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "writing external permission granted");
+                    Log.d(TAG, "<WRITE_EXTERNAL_STORAGE> permission granted");
+                }
+            }
+            case PERMISSION_REQUEST_IGNORE_BATTERY_SAVING: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "<WRITE_EXTERNAL_STORAGE> permission granted");
                 }
             }
         }

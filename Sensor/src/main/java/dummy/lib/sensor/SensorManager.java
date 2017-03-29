@@ -14,14 +14,17 @@ public class SensorManager extends BluetoothGattCallback{
 
     private Context SavedContext;
     private SensorEvents SensorListener;
+    private String LogTag = this.getClass().getSimpleName();
+    private BluetoothDevice SelectedSensor = null;
 
     public SensorManager(SensorEvents Listener, Context context){
         SensorListener = Listener;
         this.SavedContext = context;
     }
 
-    public void setDevice(BluetoothDevice Sensor){
+    public void checkDevice(BluetoothDevice Sensor){
         if (Sensor == null) return;
+        if (SelectedSensor != null) return;
         Sensor.connectGatt(SavedContext,false,this);
     }
 
@@ -29,11 +32,15 @@ public class SensorManager extends BluetoothGattCallback{
     public void onConnectionStateChange(BluetoothGatt DeviceServer, int status, int newState) {
         if (newState == BluetoothProfile.STATE_CONNECTED) {
             DeviceServer.discoverServices();
-            SensorListener.UpdateFrequency(0);
+            Log.d(LogTag, "Connected to Device server --> Starting Services discovery");
             return;
         }
         if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-            SensorListener.UpdateFrequency(-1);
+            BluetoothDevice DisconnectedDevice = DeviceServer.getDevice();
+            if (DisconnectedDevice != SelectedSensor) { Log.d(LogTag, "Unselected Device has disconnected..."); return;}
+            SensorListener.Removed();
+            SelectedSensor = null;
+            Log.d(LogTag, "Selected Device has disconnected.");
             return;
         }
     }
@@ -41,13 +48,16 @@ public class SensorManager extends BluetoothGattCallback{
     @Override
     public void onServicesDiscovered(BluetoothGatt DeviceServer, int status) {
         if (status == BluetoothGatt.GATT_SUCCESS) {
-            Log.d("Sensor", "Connected");
+            Log.d(LogTag, "Services discovered --> Checking for matching service");
             BluetoothGattService DeviceService = DeviceServer.getService(SensorConstants.SERVICE_HEART_RATE);
             if ( DeviceService == null ) {
                 DeviceServer.disconnect();
-                Log.d("Sensor", "Disconnecting");
+                Log.d(LogTag, "Device not providing expected service --> Disconnecting");
                 return;
             }
+            Log.d(LogTag, "Matching Device server found --> Configuring device");
+            SensorListener.Selected();
+            SelectedSensor = DeviceServer.getDevice();
 
             BluetoothGattCharacteristic Monitor = DeviceService.getCharacteristic(SensorConstants.CHARACTERISTIC_HEART_RATE);
             DeviceServer.setCharacteristicNotification(Monitor,true);
@@ -56,12 +66,12 @@ public class SensorManager extends BluetoothGattCallback{
             MonitorSpecs.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             DeviceServer.writeDescriptor(MonitorSpecs);
         }
-        Log.d("Sensor", "Service discovered");
-    }
+     }
 
     @Override
     public void onCharacteristicChanged(BluetoothGatt DeviceServer, BluetoothGattCharacteristic MonitoredValue) {
-        SensorListener.UpdateFrequency(MonitoredValue.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1));
-        Log.d("Sensor", "Updating");
+        int SensorValue = MonitoredValue.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1);
+        SensorListener.Updated(SensorValue);
+        Log.d(LogTag, "Updating --> Value["+SensorValue+"]");
     }
 }
