@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Core/Core.iml" filepath="$PROJECT_DIR$/Core/Core.iml" />
       <module fileurl="file://$PROJECT_DIR$/HeartSpy.iml" filepath="$PROJECT_DIR$/HeartSpy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PebbleLib/PebbleLib.iml" filepath="$PROJECT_DIR$/PebbleLib/PebbleLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/Sensor/Sensor.iml" filepath="$PROJECT_DIR$/Sensor/Sensor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Smartwatch/Smartwatch.iml" filepath="$PROJECT_DIR$/Smartwatch/Smartwatch.iml" />
     </modules>
   </component>
 </project>
