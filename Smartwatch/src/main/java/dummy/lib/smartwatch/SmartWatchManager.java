@@ -1,4 +1,4 @@
-package dummy.lib.Smartwatch;
+package dummy.lib.smartwatch;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
