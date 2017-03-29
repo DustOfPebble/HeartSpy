@@ -27,15 +27,19 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
     private Message Informations = null;
 
     private long StoredStartupTime=0;
+    private long TimeNotified = 0;
+    private long ElapsedTime = 0;
+    private String Snapshot = "";
+
     private int SearchTimeOut = 10000; // in ms TimeOut
 
     // CallBack on Frequency Updated
     @Override
     public void Updated(int Frequency) {
         if (Frequency > 0) {
-            long TimeNotified = System.currentTimeMillis();
-            long ElapsedTime = TimeNotified -StoredStartupTime;
-            String Snapshot= String.valueOf(ElapsedTime)+','+String.valueOf(Frequency);
+            TimeNotified = System.currentTimeMillis();
+            ElapsedTime = TimeNotified - StoredStartupTime;
+            Snapshot= String.valueOf(ElapsedTime)+','+String.valueOf(Frequency);
             LogWriter.appendJSON(Snapshot);
         }
         Informations = VisualIndicator.ViewUpdater.obtainMessage();
