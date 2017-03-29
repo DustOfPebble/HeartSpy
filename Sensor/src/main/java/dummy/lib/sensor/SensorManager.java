@@ -29,14 +29,15 @@ public class SensorManager extends BluetoothGattCallback{
     }
 
     @Override
-    public void onConnectionStateChange(BluetoothGatt DeviceServer, int status, int newState) {
+    public void onConnectionStateChange(BluetoothGatt DeviceSocket, int status, int newState) {
         if (newState == BluetoothProfile.STATE_CONNECTED) {
-            DeviceServer.discoverServices();
+            DeviceSocket.discoverServices();
             Log.d(LogTag, "Connected to Device server --> Starting Services discovery");
             return;
         }
         if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-            BluetoothDevice DisconnectedDevice = DeviceServer.getDevice();
+            BluetoothDevice DisconnectedDevice = DeviceSocket.getDevice();
+            DeviceSocket.close();
             if (DisconnectedDevice != SelectedSensor) { Log.d(LogTag, "Unselected Device has disconnected..."); return;}
             SensorListener.Removed();
             SelectedSensor = null;
@@ -46,30 +47,30 @@ public class SensorManager extends BluetoothGattCallback{
     }
 
     @Override
-    public void onServicesDiscovered(BluetoothGatt DeviceServer, int status) {
+    public void onServicesDiscovered(BluetoothGatt DeviceSocket, int status) {
         if (status == BluetoothGatt.GATT_SUCCESS) {
             Log.d(LogTag, "Services discovered --> Checking for matching service");
-            BluetoothGattService DeviceService = DeviceServer.getService(SensorConstants.SERVICE_HEART_RATE);
+            BluetoothGattService DeviceService = DeviceSocket.getService(SensorConstants.SERVICE_HEART_RATE);
             if ( DeviceService == null ) {
-                DeviceServer.disconnect();
+                DeviceSocket.disconnect();
                 Log.d(LogTag, "Device not providing expected service --> Disconnecting");
                 return;
             }
             Log.d(LogTag, "Matching Device server found --> Configuring device");
             SensorListener.Selected();
-            SelectedSensor = DeviceServer.getDevice();
+            SelectedSensor = DeviceSocket.getDevice();
 
             BluetoothGattCharacteristic Monitor = DeviceService.getCharacteristic(SensorConstants.CHARACTERISTIC_HEART_RATE);
-            DeviceServer.setCharacteristicNotification(Monitor,true);
+            DeviceSocket.setCharacteristicNotification(Monitor,true);
 
             BluetoothGattDescriptor MonitorSpecs = Monitor.getDescriptor(SensorConstants.DESCRIPTOR_HEART_RATE);
             MonitorSpecs.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            DeviceServer.writeDescriptor(MonitorSpecs);
+            DeviceSocket.writeDescriptor(MonitorSpecs);
         }
      }
 
     @Override
-    public void onCharacteristicChanged(BluetoothGatt DeviceServer, BluetoothGattCharacteristic MonitoredValue) {
+    public void onCharacteristicChanged(BluetoothGatt DeviceSocket, BluetoothGattCharacteristic MonitoredValue) {
         int SensorValue = MonitoredValue.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 1);
         SensorListener.Updated(SensorValue);
         Log.d(LogTag, "Updating --> Value["+SensorValue+"]");

@@ -23,6 +23,9 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
     private FileManager FilesHandler = null;
     private FileWriter LogWriter = null;
 
+    private Bundle Table = null;
+    private Message Informations = null;
+
     private long StoredStartupTime=0;
     private int SearchTimeOut = 10000; // in ms TimeOut
 
@@ -35,8 +38,8 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
             String Snapshot= String.valueOf(ElapsedTime)+','+String.valueOf(Frequency);
             LogWriter.appendJSON(Snapshot);
         }
-        Message Informations = new Message();
-        Bundle Table = new Bundle();
+        Informations = VisualIndicator.ViewUpdater.obtainMessage();
+        Table.clear();
         Table.putInt(Constants.Frequency, Frequency);
         Informations.setData(Table);
         VisualIndicator.ViewUpdater.sendMessage(Informations);
@@ -86,5 +89,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents {
         FilesHandler = new FileManager(context);
         LogWriter = new FileWriter(FilesHandler);
         StoredStartupTime = System.currentTimeMillis();
+
+        Table = new Bundle();
     }
 }
