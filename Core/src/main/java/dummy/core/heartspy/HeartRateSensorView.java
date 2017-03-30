@@ -42,7 +42,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents, Sm
     private long ElapsedTime = 0;
     private String Snapshot = "";
 
-    private int SearchTimeOut = 10000; // in ms TimeOut
+    private int SearchTimeOut = 60000; // in ms TimeOut
 
     // CallBack on Frequency Updated
     @Override
@@ -63,7 +63,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents, Sm
         Informations = VisualIndicator.ViewUpdater.obtainMessage();
         Table.clear();
         Table.putInt(Constants.Frequency, Value);
-        Table.putBoolean(Constants.Connected, true);
+        Table.putBoolean(Constants.Connected, Connected);
         Informations.setData(Table);
         VisualIndicator.ViewUpdater.sendMessage(Informations);
     }

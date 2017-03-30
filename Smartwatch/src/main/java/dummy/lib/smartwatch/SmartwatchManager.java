@@ -15,7 +15,7 @@ public class SmartwatchManager extends BroadcastReceiver {
 
     private String LogTag = this.getClass().getSimpleName();
 
-    boolean WatchConnected = false;
+    boolean isConnected = false;
 
     private UUID Identifier;
     private Context SavedContext;
@@ -61,14 +61,14 @@ public class SmartwatchManager extends BroadcastReceiver {
         // Connections Management
         if (Operation.equals(Constants.INTENT_PEBBLE_CONNECTED))
         {
-            WatchConnected = true;
-            Listener.ConnectedStateChanged(WatchConnected);
+            isConnected = true;
+            Listener.ConnectedStateChanged(isConnected);
         }
 
         if (Operation.equals(Constants.INTENT_PEBBLE_DISCONNECTED))
         {
-            WatchConnected = false;
-            Listener.ConnectedStateChanged(WatchConnected);
+            isConnected = false;
+            Listener.ConnectedStateChanged(isConnected);
         }
 
         // Received Data ...

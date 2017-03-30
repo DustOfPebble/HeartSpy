@@ -141,13 +141,9 @@ public class BeatIndicator extends ImageView implements Handler.Callback {
     @Override
     public boolean handleMessage(Message Informations) {
         int Frequency = Informations.getData().getInt(Constants.Frequency);
-        if (Frequency < 0) {
-            setConnectedState(false);
-            setHeartRate(0);
-        } else {
-            setConnectedState(true);
-            setHeartRate(Frequency);
-        }
+        Boolean isConnected = Informations.getData().getBoolean(Constants.Connected);
+        setConnectedState(isConnected);
+        setHeartRate(Frequency);
         return true;
     }
 }
