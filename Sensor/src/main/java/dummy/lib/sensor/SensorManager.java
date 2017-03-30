@@ -12,9 +12,10 @@ import android.util.Log;
 
 public class SensorManager extends BluetoothGattCallback{
 
+    private String LogTag = this.getClass().getSimpleName();
+
     private Context SavedContext;
     private SensorEvents SensorListener;
-    private String LogTag = this.getClass().getSimpleName();
     private BluetoothDevice SelectedSensor = null;
 
     public SensorManager(SensorEvents Listener, Context context){

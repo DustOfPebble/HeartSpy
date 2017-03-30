@@ -1,7 +1,6 @@
 package dummy.lib.smartwatch;
 
-public interface SmartWatchNotifyCallBack {
-        void BlocksReceived(int NbBlocks);
+public interface SmartwatchEvents {
         void ConnectedStateChanged(Boolean Connected);
 }
 

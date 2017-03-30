@@ -13,12 +13,13 @@ import java.util.List;
 
 public class SensorDetector extends ScanCallback implements Runnable {
 
+    private String LogTag = this.getClass().getSimpleName();
+
     private int TimeOut = 1000; // default TimeOut in ms ...
     private Handler TriggerEvent;
     private Runnable TerminateSearch;
     private SensorEvents SensorNotify;
     private BluetoothLeScanner DeviceScanner;
-    private String LogTag = this.getClass().getSimpleName();
     private Boolean isScanning = false;
 
     public SensorDetector(SensorEvents Callback, int  TimeOut) {
