@@ -143,7 +143,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents, Sm
 
         // Start Event simulator
         Event = new Handler();
-        this.run();
+        //this.run();
     }
 
     @Override
