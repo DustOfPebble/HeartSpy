@@ -3,11 +3,11 @@ package dummy.lib.smartwatch;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.util.Log;
 
 import com.getpebble.android.kit.Constants;
 import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.util.PebbleDictionary;
 
 import java.util.UUID;
 
@@ -20,27 +20,30 @@ public class SmartwatchManager extends BroadcastReceiver {
     private UUID Identifier;
     private Context SavedContext;
 
+    private PebbleKit.PebbleDataReceiver DataReceiver;
+
     SmartwatchEvents Listener;
 
-    public SmartwatchManager(SmartwatchEvents Caller, Context ProvidedContext) {
+    public SmartwatchManager(Context ProvidedContext, SmartwatchEvents Caller, String SmartwatchUUID ) {
         Listener = Caller;
         SavedContext =  ProvidedContext;
+        Identifier = UUID.fromString(SmartwatchUUID);
+        PebbleKit.registerPebbleConnectedReceiver(SavedContext, this);
+        PebbleKit.registerPebbleDisconnectedReceiver(SavedContext, this);
 
-        IntentFilter Filter = new IntentFilter();
-        Filter.addAction(Constants.INTENT_PEBBLE_CONNECTED);
-        Filter.addAction(Constants.INTENT_PEBBLE_DISCONNECTED);
-        Filter.addAction(Constants.INTENT_APP_RECEIVE);
-        Filter.addAction(Constants.INTENT_APP_ACK);
-        Filter.addAction(Constants.INTENT_APP_NACK);
-        SavedContext.registerReceiver(this, Filter);
+        DataReceiver = new PebbleKit.PebbleDataReceiver(Identifier) {
+            @Override
+            public void receiveData(Context context, int Id, PebbleDictionary DataBlock) {
+                PebbleKit.sendAckToPebble(context, Id);
+                Long Data = DataBlock.getInteger(0);
+                if (Data != null) Log.d(LogTag, "Received value["+Data.intValue()+"]");
+            }
+        };
+        PebbleKit.registerReceivedDataHandler(SavedContext, DataReceiver);
     }
 
     public boolean isConnected() {
         return PebbleKit.isWatchConnected(SavedContext);
-    }
-
-    public void setID(String Signature) {
-        Identifier = UUID.fromString(Signature);
     }
 
     public void send(SmartwatchBundle DataSet) {
@@ -49,44 +52,24 @@ public class SmartwatchManager extends BroadcastReceiver {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent)
-    {
-        Log.d(LogTag, "Intent received");
+    public void onReceive(Context context, Intent intent) {
+        if (context != SavedContext) return;
         if (intent == null) return;
-        String Operation = intent.getAction();
-        if (Operation==null) return;
-
-        Log.d(LogTag, "Intent catched");
-
+        String Event = intent.getAction();
         // Connections Management
-        if (Operation.equals(Constants.INTENT_PEBBLE_CONNECTED))
+        if (Event.equals(Constants.INTENT_PEBBLE_CONNECTED))
         {
             isConnected = true;
             Listener.ConnectedStateChanged(isConnected);
         }
 
-        if (Operation.equals(Constants.INTENT_PEBBLE_DISCONNECTED))
+        if (Event.equals(Constants.INTENT_PEBBLE_DISCONNECTED))
         {
             isConnected = false;
             Listener.ConnectedStateChanged(isConnected);
         }
-
-        // Received Data ...
-        if (Operation.equals(Constants.INTENT_APP_RECEIVE))
-        {
-            Log.d(LogTag, "Intent ==> APP_RECEIVE");
-        }
-
-        if (Operation.equals(Constants.INTENT_APP_ACK))
-        {
-            Log.d(LogTag, "Intent ==> INTENT_APP_ACK");
-        }
-
-        if (Operation.equals(Constants.INTENT_APP_NACK))
-        {
-            Log.d(LogTag, "Intent ==> INTENT_APP_ACK");
-        }
     }
 }
+
 
 

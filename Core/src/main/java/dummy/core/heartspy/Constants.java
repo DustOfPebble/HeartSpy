@@ -8,5 +8,5 @@ public class Constants {
     static public final String Connected = "<->";
 
     static public final String WatchUUID = "e603e869-8eff-40c3-9957-6c6f6087fd57";
-    static public final int HeartBeatMeasure = 0;
+    static public final int SensorValue = 0;
 }

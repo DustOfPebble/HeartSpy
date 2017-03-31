@@ -3,11 +3,15 @@ package dummy.core.heartspy;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.EventLog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
+
+import java.util.Random;
 
 import dummy.lib.sensor.SensorDetector;
 import dummy.lib.sensor.SensorManager;
@@ -17,7 +21,7 @@ import dummy.lib.smartwatch.SmartwatchBundle;
 import dummy.lib.smartwatch.SmartwatchEvents;
 import dummy.lib.smartwatch.SmartwatchManager;
 
-public class HeartRateSensorView extends FrameLayout implements SensorEvents, SmartwatchEvents {
+public class HeartRateSensorView extends FrameLayout implements SensorEvents, SmartwatchEvents, Runnable {
 
     private String LogTag = this.getClass().getSimpleName();
 
@@ -44,6 +48,11 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents, Sm
 
     private int SearchTimeOut = 60000; // in ms TimeOut
 
+    private Handler Event = null;
+    private int EventCount = 0;
+    private int EventDelay = 1000; // in ms
+
+
     // CallBack on Frequency Updated
     @Override
     public void Updated(int Frequency) {
@@ -69,7 +78,7 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents, Sm
     }
 
     private void UpdateWatchView(int Frequency) {
-        DataSet.update(Constants.HeartBeatMeasure,Frequency);
+        DataSet.update(Constants.SensorValue,Frequency);
         if (!isWatchConnected) return;
         WatchConnector.send(DataSet);
     }
@@ -129,13 +138,27 @@ public class HeartRateSensorView extends FrameLayout implements SensorEvents, Sm
 
         Table = new Bundle();
         DataSet = new SmartwatchBundle();
-        WatchConnector = new SmartwatchManager(this, context);
-        WatchConnector.setID(Constants.WatchUUID);
+        WatchConnector = new SmartwatchManager(context,this,Constants.WatchUUID);
         isWatchConnected = WatchConnector.isConnected();
+
+        // Start Event simulator
+        Event = new Handler();
+        this.run();
     }
 
     @Override
     public void ConnectedStateChanged(Boolean ConnectState) {
         isWatchConnected = ConnectState;
+    }
+
+    // Force a Write to the Smartwatch ...
+    @Override
+    public void run() {
+        EventCount++;
+        if (EventCount>220) EventCount=40;
+        DataSet.update(Constants.SensorValue,EventCount);
+        if (!isWatchConnected) return;
+        WatchConnector.send(DataSet);
+        Event.postDelayed(this, EventDelay);
     }
 }
