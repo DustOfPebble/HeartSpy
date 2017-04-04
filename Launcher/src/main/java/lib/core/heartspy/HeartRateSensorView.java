@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
-import lib.sensors.events.SensorEvents;
+import lib.sensors.events.Events;
 import lib.wrist.sensor.SensorDetector;
 import lib.wrist.sensor.SensorManager;
 
@@ -17,7 +17,7 @@ import lib.smartwatch.SmartwatchBundle;
 import lib.smartwatch.SmartwatchEvents;
 import lib.smartwatch.SmartwatchManager;
 //ToDo: Remove code from FrameLayout and put every functionnal to an Application.
-public class HeartRateSensorView extends FrameLayout implements SensorEvents, SmartwatchEvents, Runnable {
+public class HeartRateSensorView extends FrameLayout implements Events, SmartwatchEvents, Runnable {
 
     private String LogTag = this.getClass().getSimpleName();
 

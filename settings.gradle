@@ -1,1 +1,1 @@
-include ':Launcher', ':Sensor', ':Smartwatch', ':PebbleLib', ':Events'
+include ':Launcher', ':Sensor', ':Smartwatch', ':PebbleLib', ':SensorEvents'

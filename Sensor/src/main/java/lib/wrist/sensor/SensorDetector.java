@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import java.util.List;
 
-import lib.sensors.events.SensorEvents;
+import lib.sensors.events.Events;
 
 public class SensorDetector extends ScanCallback implements Runnable {
 
@@ -19,11 +19,11 @@ public class SensorDetector extends ScanCallback implements Runnable {
     private int TimeOut = 1000; // default TimeOut in ms ...
     private Handler TriggerEvent;
     private Runnable TerminateSearch;
-    private SensorEvents SensorNotify;
+    private Events SensorNotify;
     private BluetoothLeScanner DeviceScanner;
     private Boolean isScanning = false;
 
-    public SensorDetector(SensorEvents Callback, int  TimeOut) {
+    public SensorDetector(Events Callback, int  TimeOut) {
         SensorNotify = Callback;
         TerminateSearch = this;
         TriggerEvent = new Handler();
