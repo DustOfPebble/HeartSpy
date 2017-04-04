@@ -9,9 +9,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
+import lib.sensors.events.SensorEvents;
 import lib.wrist.sensor.SensorDetector;
 import lib.wrist.sensor.SensorManager;
-import lib.wrist.sensor.SensorEvents;
 
 import lib.smartwatch.SmartwatchBundle;
 import lib.smartwatch.SmartwatchEvents;

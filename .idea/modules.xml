@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Core/Core.iml" filepath="$PROJECT_DIR$/Core/Core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Events/Events.iml" filepath="$PROJECT_DIR$/Events/Events.iml" />
       <module fileurl="file://$PROJECT_DIR$/HeartSpy.iml" filepath="$PROJECT_DIR$/HeartSpy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Launcher/Launcher.iml" filepath="$PROJECT_DIR$/Launcher/Launcher.iml" />
       <module fileurl="file://$PROJECT_DIR$/PebbleLib/PebbleLib.iml" filepath="$PROJECT_DIR$/PebbleLib/PebbleLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/Sensor/Sensor.iml" filepath="$PROJECT_DIR$/Sensor/Sensor.iml" />
       <module fileurl="file://$PROJECT_DIR$/Smartwatch/Smartwatch.iml" filepath="$PROJECT_DIR$/Smartwatch/Smartwatch.iml" />

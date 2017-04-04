@@ -1,4 +1,4 @@
-package lib.wrist.sensor;
+package lib.sensors.events;
 
 import android.bluetooth.BluetoothDevice;
 

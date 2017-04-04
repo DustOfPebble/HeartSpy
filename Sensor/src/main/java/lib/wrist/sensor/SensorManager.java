@@ -10,6 +10,8 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.util.Log;
 
+import lib.sensors.events.SensorEvents;
+
 public class SensorManager extends BluetoothGattCallback{
 
     private String LogTag = this.getClass().getSimpleName();

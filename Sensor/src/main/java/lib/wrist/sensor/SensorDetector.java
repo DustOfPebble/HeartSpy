@@ -8,8 +8,9 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanResult;
 import android.os.Handler;
 import android.util.Log;
-
 import java.util.List;
+
+import lib.sensors.events.SensorEvents;
 
 public class SensorDetector extends ScanCallback implements Runnable {
 

@@ -9,7 +9,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/Core" />
+            <option value="$PROJECT_DIR$/Events" />
+            <option value="$PROJECT_DIR$/Launcher" />
             <option value="$PROJECT_DIR$/PebbleLib" />
             <option value="$PROJECT_DIR$/Sensor" />
             <option value="$PROJECT_DIR$/Smartwatch" />
