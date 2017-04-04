@@ -1,4 +1,4 @@
-package dummy.core.heartspy;
+package lib.core.heartspy;
 
 public class Constants {
     static public final String FilesWorkingSpace = "Heartbeat.Files";

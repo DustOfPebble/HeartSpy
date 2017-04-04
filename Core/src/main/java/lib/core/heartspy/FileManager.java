@@ -1,4 +1,4 @@
-package dummy.core.heartspy;
+package lib.core.heartspy;
 
 import android.content.Context;
 import android.os.Environment;
@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+//ToDo: Create a dedicated package ... Keep only record in main code.
 public class FileManager {
     private ArrayList<File> Collection = null;
     private File Directory;

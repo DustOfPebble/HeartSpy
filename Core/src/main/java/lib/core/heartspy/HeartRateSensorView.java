@@ -1,4 +1,4 @@
-package dummy.core.heartspy;
+package lib.core.heartspy;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -6,21 +6,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.EventLog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
-import java.util.Random;
+import lib.wrist.sensor.SensorDetector;
+import lib.wrist.sensor.SensorManager;
+import lib.wrist.sensor.SensorEvents;
 
-import dummy.lib.sensor.SensorDetector;
-import dummy.lib.sensor.SensorManager;
-import dummy.lib.sensor.SensorEvents;
-
-import dummy.lib.smartwatch.SmartwatchBundle;
-import dummy.lib.smartwatch.SmartwatchEvents;
-import dummy.lib.smartwatch.SmartwatchManager;
-
+import lib.smartwatch.SmartwatchBundle;
+import lib.smartwatch.SmartwatchEvents;
+import lib.smartwatch.SmartwatchManager;
+//ToDo: Remove code from FrameLayout and put every functionnal to an Application.
 public class HeartRateSensorView extends FrameLayout implements SensorEvents, SmartwatchEvents, Runnable {
 
     private String LogTag = this.getClass().getSimpleName();

@@ -1,4 +1,4 @@
-package dummy.core.heartspy;
+package lib.core.heartspy;
 
 import android.Manifest;
 import android.app.Activity;

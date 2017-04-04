@@ -1,4 +1,4 @@
-package dummy.core.heartspy;
+package lib.core.heartspy;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

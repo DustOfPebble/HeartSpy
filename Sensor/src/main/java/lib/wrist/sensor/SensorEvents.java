@@ -1,4 +1,4 @@
-package dummy.lib.sensor;
+package lib.wrist.sensor;
 
 import android.bluetooth.BluetoothDevice;
 
