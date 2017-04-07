@@ -1,8 +1,11 @@
 package lib.core.heartspy;
 
 import android.os.Binder;
+import android.util.Log;
 
 public class ServiceAccess extends Binder {
+
+    private String LogTag = this.getClass().getSimpleName();
 
     private ServiceCommands Service = null;
     private UpdateEvents Updater = null;
@@ -13,7 +16,14 @@ public class ServiceAccess extends Binder {
     public void StartSearch() { Service.StartSearch(); }
     public void StopSearch() { Service.StopSearch(); }
 
-    public void Update(int Value) { Updater.Update(Value); }
-    public void StateChanged(int State) { Updater.StateChanged(State); }
+    public void Update(int Value) {
+        try { Updater.Update(Value);}
+        catch (Exception Failed) { Log.d(LogTag, "Failed on Update event");}
+    }
+
+    public void StateChanged(int State) {
+        try {Updater.StateChanged(State); }
+        catch (Exception Failed) { Log.d(LogTag, "Failed on StateChanged event");}
+    }
 
 }
