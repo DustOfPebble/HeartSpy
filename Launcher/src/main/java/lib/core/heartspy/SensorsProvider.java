@@ -155,15 +155,21 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
      **************************************************************/
     @Override
     public void StartSearch() {
+        if (ServiceStatus == Constants.ServiceSearching) return;
         SensorFinder.startSearch();
         ServiceStatus = Constants.ServiceSearching;
         PushSystemNotification();
 
         Connector.StateChanged(Constants.ServiceSearching);
-
     }
 
     @Override
-    public void StopSearch() { SensorFinder.stopSearch();}
+    public void StopSearch() {
+        if (ServiceStatus == Constants.ServiceSearching) {
+            SensorFinder.stopSearch();
+            ServiceStatus = Constants.ServiceWaiting;
+            PushSystemNotification();
+        }
+    }
 
 }
