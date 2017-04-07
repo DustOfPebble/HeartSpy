@@ -1,4 +1,4 @@
-package lib.sensors.events;
+package lib.events.events;
 
 import org.junit.Test;
 

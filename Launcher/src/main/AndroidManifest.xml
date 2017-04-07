@@ -14,5 +14,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:description="@string/ServiceFunction"
+            android:label="@string/ServiceName"
+            android:name=".SensorsProvider"
+            android:exported="true"
+            android:icon="@mipmap/heartspy"
+            />
     </application>
 </manifest>

@@ -12,15 +12,12 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-public class BeatIndicator extends ImageView implements Handler.Callback {
+public class BeatIndicator extends ImageView  {
 
-    public Handler ViewUpdater =null;
     public int WidthToHeightFactor = 1;
 
     private Bitmap Sensor_NotConnected_Background;
@@ -46,8 +43,6 @@ public class BeatIndicator extends ImageView implements Handler.Callback {
     public BeatIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setAdjustViewBounds(true);
-
-        ViewUpdater = new Handler(this);
 
         ShaderPainter = new Paint();
         ImageScaler = new Matrix();
@@ -138,13 +133,5 @@ public class BeatIndicator extends ImageView implements Handler.Callback {
         super.onDraw(canvas);
     }
 
-    @Override
-    public boolean handleMessage(Message Informations) {
-        int Frequency = Informations.getData().getInt(Constants.Frequency);
-        Boolean isConnected = Informations.getData().getBoolean(Constants.Connected);
-        setConnectedState(isConnected);
-        setHeartRate(Frequency);
-        return true;
-    }
 }
 

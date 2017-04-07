@@ -1,4 +1,4 @@
-package lib.sensors.events;
+package lib.events.events;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

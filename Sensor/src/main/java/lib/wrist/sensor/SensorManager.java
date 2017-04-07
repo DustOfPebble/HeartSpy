@@ -10,17 +10,17 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.util.Log;
 
-import lib.sensors.events.Events;
+import lib.events.SensorEvents;
 
 public class SensorManager extends BluetoothGattCallback{
 
     private String LogTag = this.getClass().getSimpleName();
 
     private Context SavedContext;
-    private Events SensorListener;
+    private SensorEvents SensorListener;
     private BluetoothDevice SelectedSensor = null;
 
-    public SensorManager(Events Listener, Context context){
+    public SensorManager(SensorEvents Listener, Context context){
         SensorListener = Listener;
         this.SavedContext = context;
     }

@@ -1,61 +1,118 @@
 package lib.core.heartspy;
 
-import android.Manifest;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 
-import static android.content.ContentValues.TAG;
+public class StartupSettings extends Activity implements UpdateEvents, View.OnClickListener, ServiceConnection {
 
-public class StartupSettings extends Activity {
+    private String LogTag = this.getClass().getSimpleName();
 
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
-    private static final int PERMISSION_REQUEST_EXTERNAL_STORAGE = 2;
-    private static final int PERMISSION_REQUEST_IGNORE_BATTERY_SAVING = 3;
+    private BeatIndicator VisualIndicator = null;
+    private ServiceAccess SensorService = null;
+    private PermissionCollection Permissions = new PermissionCollection();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Android M Permission check 
-            if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
-            }
-            if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_EXTERNAL_STORAGE);
-            }
-            if (this.checkSelfPermission(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS}, PERMISSION_REQUEST_IGNORE_BATTERY_SAVING);
-            }
-        }
+        // Get Instance of used HMI objects
         setContentView(R.layout.startup_settings);
-        findViewById(R.id.heart_rate_sensor_view);
+        VisualIndicator = (BeatIndicator) findViewById(R.id.beat_indicator);
+        VisualIndicator.setConnectedState(false);
+        VisualIndicator.setHeartRate(0);
+        VisualIndicator.setOnClickListener(this);
+
+        // Checking permissions
+        String Requested = Permissions.Selected();
+        while (Requested != null) {
+            if (CheckPermission(Permissions.Selected())) Permissions.setGranted();
+            Permissions.Next();
+            Requested = Permissions.Selected();
+        }
+
+        String[] NotGrantedPermissions = Permissions.NotGranted();
+        if (NotGrantedPermissions.length > 0) requestPermissions(NotGrantedPermissions,0);
+        else StartComponents();
+    }
+
+    private void StartComponents(){
+        // Start Service
+        Log.d(LogTag, "Requesting Service to start...");
+        Intent ServiceStarter = new Intent(this, SensorsProvider.class);
+        startService(ServiceStarter);
+        bindService(ServiceStarter, this, 0);
+    }
+
+    // Manage Click on the BeatIndicator
+    @Override
+    public void onClick(View Widget) {
+        if (Widget == null) return;
+        if (Widget.getId() != VisualIndicator.getId()) return;
+        Log.d(LogTag, "Managing Click request...");
+
+        if (SensorService == null) return;
+        SensorService.StartSearch();
+
+    }
+
+    /************************************************************************
+     * Handler Callback implementation to manage update from Sensor service
+     * **********************************************************************/
+    @Override
+    public void Update(int Value) {
+        VisualIndicator.setHeartRate(Value);
+    }
+
+    @Override
+    public void StateChanged(int State) {
+        if (State == Constants.ServiceRunning) VisualIndicator.setConnectedState(true);
+        else VisualIndicator.setConnectedState(false);
+    }
+    /************************************************************************
+     * Managing requested permissions at runtime
+     * **********************************************************************/
+    private boolean CheckPermission(String RequestedPermission) {
+        if (this.checkSelfPermission(RequestedPermission) != PackageManager.PERMISSION_GRANTED)  return false;
+        return true;
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        if (grantResults == null) { Log.d("Startup:", "Granted Permissions is undefined"); return;}
-        if (grantResults.length == 0) { Log.d("Startup:", "Granted Permissions empty"); return;}
+        if (grantResults == null) { Log.d(LogTag, "Granted Permissions is undefined"); return;}
+        if (grantResults.length == 0) { Log.d(LogTag, "Granted Permissions is empty"); return;}
 
-        switch (requestCode) {
-            case PERMISSION_REQUEST_COARSE_LOCATION: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "<REQUEST_IGNORE_BATTERY_OPTIMIZATIONS> permission granted");
-                }
-            }
-            case PERMISSION_REQUEST_EXTERNAL_STORAGE: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "<WRITE_EXTERNAL_STORAGE> permission granted");
-                }
-            }
-            case PERMISSION_REQUEST_IGNORE_BATTERY_SAVING: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "<WRITE_EXTERNAL_STORAGE> permission granted");
-                }
-            }
+        Log.d(LogTag, "Collecting Permissions results...");
+        Boolean PermissionsGranted = true;
+        for(int i = 0; i < grantResults.length; i++) {
+            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) PermissionsGranted = false;
         }
+
+        if (PermissionsGranted) StartComponents();
+        else finish();
     }
+
+    /************************************************************************
+     * Managing connection to Service
+     * **********************************************************************/
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        SensorService = (ServiceAccess)service;
+        Log.d(LogTag, "Connected to SensorProvider");
+        SensorService.RegisterListener(this);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        SensorService = null;
+        Log.d(LogTag, "Disconnected from SensorProvider");
+    }
+
 }
 

@@ -5,13 +5,21 @@
     android:orientation="vertical"
     >
 
-    <lib.core.heartspy.HeartRateSensorView
+    <FrameLayout
         android:id="@+id/heart_rate_sensor_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="10dp"
-        android:paddingBottom="5dp"
+        android:paddingBottom="5dp">
+
+        <lib.core.heartspy.BeatIndicator
+            android:id="@+id/beat_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
         />
+
+    </FrameLayout>
 </LinearLayout>
