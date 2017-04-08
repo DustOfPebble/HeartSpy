@@ -3,9 +3,9 @@
     <string name="ServiceFunction">Managing an heart rate monitoring Bluetooth sensor</string>
     <string name="ServiceName">HeartSpy Service</string>
 
-    <string name="WaitingMode">Service is standby</string>
-    <string name="SearchingMode">Service is searching a heart rate monitoring sensor</string>
-    <string name="RunningMode">Service is connected to a heart rate monitoring sensor</string>
+    <string name="WaitingMode">No Sensor active</string>
+    <string name="SearchingMode">Searching for a Sensor</string>
+    <string name="RunningMode">Listening to a Sensor</string>
 
     <string name="ID">Identifier</string>
 </resources>

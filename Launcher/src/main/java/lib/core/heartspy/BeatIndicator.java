@@ -12,12 +12,16 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-public class BeatIndicator extends ImageView  {
+public class BeatIndicator extends ImageView implements Runnable {
 
+    private String LogTag = this.getClass().getSimpleName();
+    private Handler Synchronized = new Handler();
     public int WidthToHeightFactor = 1;
 
     private Bitmap Sensor_NotConnected_Background;
@@ -54,19 +58,17 @@ public class BeatIndicator extends ImageView  {
         TextPainter.setTypeface(Typeface.DEFAULT_BOLD);
     }
 
-    public void setHeartRate(int Frequency){
-        this.Frequency = Frequency;
-//        if (Connected) { ScaleAnimation.start(); }
-    }
-
-    public void setConnectedState(Boolean Connected){
-        this.Connected = Connected;
+    public void setHeartRate(int Value){
+        Frequency = Value;
+        Log.d(LogTag, "Displayed value is "+Frequency);
+        if (Connected) Synchronized.post(this);
         invalidate();
     }
 
-    public void setScaleFactor(float ScaleFactor) {
-        this.ScaleFactor = ScaleFactor;
-        postInvalidate();
+    public void setConnectionState(Boolean State){
+        Log.d(LogTag, "Sensor is "+(Connected? "connected":"disconnected"));
+        Connected = State;
+        invalidate();
     }
 
     void LoadResources(int Width, int Height) {        // Loading or Reloading Bitmaps ...
@@ -98,6 +100,11 @@ public class BeatIndicator extends ImageView  {
         ScaleAnimation.play(ScaleAnimated);
         ScaleAnimation.setInterpolator(new LinearInterpolator());
     }
+    // Called by ScaleAnimated ..
+    public void setScaleFactor(float ScaleFactor) {
+        this.ScaleFactor = ScaleFactor;
+        postInvalidate();
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -114,6 +121,7 @@ public class BeatIndicator extends ImageView  {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Log.d(LogTag, "Drawning flag is "+(Connected? "connected":"disconnected"));
         if (Connected) {
             // Draw image Background
             canvas.drawBitmap(Sensor_Connected_Background, 0f, 0f, null);
@@ -133,5 +141,12 @@ public class BeatIndicator extends ImageView  {
         super.onDraw(canvas);
     }
 
+    /*********************************************************************************************
+     *  Refreshing and animating UI thread
+     *********************************************************************************************/
+    @Override
+    public void run() {
+        ScaleAnimation.start();
+    }
 }
 

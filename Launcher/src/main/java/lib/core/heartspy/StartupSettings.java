@@ -24,7 +24,7 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
         // Get Instance of used HMI objects
         setContentView(R.layout.startup_settings);
         VisualIndicator = (BeatIndicator) findViewById(R.id.beat_indicator);
-        VisualIndicator.setConnectedState(false);
+        VisualIndicator.setConnectionState(false);
         VisualIndicator.setHeartRate(0);
         VisualIndicator.setOnClickListener(this);
 
@@ -70,8 +70,8 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
 
     @Override
     public void StateChanged(int State) {
-        if (State == Constants.ServiceRunning) VisualIndicator.setConnectedState(true);
-        else VisualIndicator.setConnectedState(false);
+        if (State == Constants.ServiceRunning) VisualIndicator.setConnectionState(true);
+        else VisualIndicator.setConnectionState(false);
     }
     /************************************************************************
      * Managing requested permissions at runtime
