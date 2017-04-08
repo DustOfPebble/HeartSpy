@@ -56,7 +56,7 @@ public class BeatIndicator extends ImageView  {
 
     public void setHeartRate(int Frequency){
         this.Frequency = Frequency;
-        if (Connected) { ScaleAnimation.start(); }
+//        if (Connected) { ScaleAnimation.start(); }
     }
 
     public void setConnectedState(Boolean Connected){

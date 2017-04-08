@@ -10,7 +10,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 
-public class StartupSettings extends Activity implements UpdateEvents, View.OnClickListener, ServiceConnection {
+public class StartupSettings extends Activity implements  View.OnClickListener,UpdateEvents,ServiceConnection {
 
     private String LogTag = this.getClass().getSimpleName();
 

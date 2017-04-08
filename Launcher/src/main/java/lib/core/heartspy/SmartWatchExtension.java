@@ -17,6 +17,7 @@ public class SmartWatchExtension implements SmartwatchEvents {
     public SmartWatchExtension(Context context) {
         WatchConnector = new SmartwatchManager(context,this,WatchConstants.WatchUUID);
         isWatchConnected = WatchConnector.isConnected();
+        DataSet = new SmartwatchBundle();
     }
 
     void push(Bundle Values) {
@@ -25,17 +26,12 @@ public class SmartWatchExtension implements SmartwatchEvents {
             if (key == Constants.SensorValue)
                 DataSet.update(WatchConstants.SensorValue, Values.getInt(key));
         }
-
         WatchConnector.send(DataSet);
-
-        DataSet = new SmartwatchBundle();
-
     }
 
     @Override
     public void ConnectedStateChanged(Boolean ConnectState) {
         isWatchConnected = ConnectState;
     }
-
 
 }
