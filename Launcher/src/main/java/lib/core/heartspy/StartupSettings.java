@@ -71,7 +71,6 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
 
     @Override
     public void StateChanged(int State) {
-        Log.d (LogTag, "State value is ["+State+"]");
         if (State == Constants.ServiceRunning) VisualIndicator.setConnectionState(true);
         else VisualIndicator.setConnectionState(false);
     }

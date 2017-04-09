@@ -63,16 +63,14 @@ public class BeatIndicator extends ImageView implements Runnable {
 
     public void setHeartRate(int Value){
         Frequency = Value;
-        Log.d(LogTag, "Displayed value is "+Frequency);
         if (!Connected) return;
         Synchronized.post(this);
-        invalidate();
     }
 
     public void setConnectionState(Boolean State){
         Log.d(LogTag, "Sensor is "+(Connected? "connected":"disconnected"));
         Connected = State;
-        invalidate();
+        Synchronized.post(this);
     }
 
     void LoadResources(int Width, int Height) {        // Loading or Reloading Bitmaps ...
@@ -125,7 +123,6 @@ public class BeatIndicator extends ImageView implements Runnable {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.d(LogTag, "Drawning flag is "+(Connected? "connected":"disconnected"));
         if (Connected) {
             // Draw image Background
             canvas.drawBitmap(Sensor_Connected_Background, 0f, 0f, null);
@@ -150,6 +147,7 @@ public class BeatIndicator extends ImageView implements Runnable {
      *********************************************************************************************/
     @Override
     public void run() {
+        invalidate();
         ScaleAnimation.start();
     }
 }
