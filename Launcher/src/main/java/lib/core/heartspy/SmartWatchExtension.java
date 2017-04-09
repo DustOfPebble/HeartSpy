@@ -7,6 +7,12 @@ import lib.smartwatch.SmartwatchBundle;
 import lib.smartwatch.SmartwatchEvents;
 import lib.smartwatch.SmartwatchManager;
 
+/******************************************************************************
+ *  This belongs to main app because it have to customized
+ *      - Key values
+ *      - Values types
+ *  NB: the business logic remains the same whatever datas sent
+ ******************************************************************************/
 public class SmartWatchExtension implements SmartwatchEvents {
 
     private SmartwatchManager WatchConnector = null;
