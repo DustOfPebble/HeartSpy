@@ -75,7 +75,7 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
         ServiceStatus = Constants.ServiceRunning;
         PushSystemNotification();
 
-        Connector.StateChanged(Constants.ServiceRunning);
+        Connector.StateChanged(ServiceStatus);
 
         SensorSnapshot.clear();
         SensorSnapshot.putBoolean(Constants.SensorSelected, true);
@@ -87,7 +87,7 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
         ServiceStatus = Constants.ServiceWaiting;
         PushSystemNotification();
 
-        Connector.StateChanged(Constants.ServiceWaiting);
+        Connector.StateChanged(ServiceStatus);
 
         SensorSnapshot.clear();
         SensorSnapshot.putBoolean(Constants.SensorSelected, false);
@@ -99,7 +99,7 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
         ServiceStatus = Constants.ServiceWaiting;
         PushSystemNotification();
 
-        Connector.StateChanged(Constants.ServiceWaiting);
+        Connector.StateChanged(ServiceStatus);
 
         SensorSnapshot.clear();
         SensorSnapshot.putBoolean(Constants.SensorSelected, false);
@@ -151,22 +151,33 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
      *  Callbacks implementation for Incoming messages
      **************************************************************/
     @Override
-    public void StartSearch() {
+    public void SearchSensor() {
         if (ServiceStatus == Constants.ServiceSearching) return;
         SensorFinder.startSearch();
         ServiceStatus = Constants.ServiceSearching;
         PushSystemNotification();
 
-        Connector.StateChanged(Constants.ServiceSearching);
+        Connector.StateChanged(ServiceStatus);
     }
 
     @Override
-    public void StopSearch() {
+    public void Stop() {
         if (ServiceStatus == Constants.ServiceSearching) {
             SensorFinder.stopSearch();
             ServiceStatus = Constants.ServiceWaiting;
             PushSystemNotification();
         }
+        if (ServiceStatus == Constants.ServiceRunning) {
+            SensorListener.disconnect();
+        }
+
     }
+
+    @Override
+    public void Query() {
+        Connector.StateChanged(ServiceStatus);
+    }
+
+
 
 }

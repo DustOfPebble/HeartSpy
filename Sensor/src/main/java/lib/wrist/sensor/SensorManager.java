@@ -19,6 +19,7 @@ public class SensorManager extends BluetoothGattCallback{
     private Context SavedContext;
     private SensorEvents SensorListener;
     private BluetoothDevice SelectedSensor = null;
+    private BluetoothGatt SelectedSocket = null;
 
     public SensorManager(SensorEvents Listener, Context context){
         SensorListener = Listener;
@@ -30,6 +31,13 @@ public class SensorManager extends BluetoothGattCallback{
         if (SelectedSensor != null) return;
         Sensor.connectGatt(SavedContext,false,this);
     }
+
+    public void disconnect() {
+        SelectedSocket.disconnect();
+    }
+    /********************************************************************************************
+     * Callback implematation for Bluetooth GATT
+     *********************************************************************************************/
 
     @Override
     public void onConnectionStateChange(BluetoothGatt DeviceSocket, int status, int newState) {
@@ -44,6 +52,7 @@ public class SensorManager extends BluetoothGattCallback{
             if (DisconnectedDevice != SelectedSensor) { Log.d(LogTag, "Unselected Device has disconnected..."); return;}
             SensorListener.Removed();
             SelectedSensor = null;
+            SelectedSocket = null;
             Log.d(LogTag, "Selected Device has disconnected.");
             return;
         }
@@ -61,14 +70,15 @@ public class SensorManager extends BluetoothGattCallback{
             }
             Log.d(LogTag, "Matching Device server found --> Configuring device");
             SensorListener.Selected();
-            SelectedSensor = DeviceSocket.getDevice();
+            SelectedSocket = DeviceSocket;
+            SelectedSensor = SelectedSocket.getDevice();
 
             BluetoothGattCharacteristic Monitor = DeviceService.getCharacteristic(SensorConstants.CHARACTERISTIC_HEART_RATE);
-            DeviceSocket.setCharacteristicNotification(Monitor,true);
+            SelectedSocket.setCharacteristicNotification(Monitor,true);
 
             BluetoothGattDescriptor MonitorSpecs = Monitor.getDescriptor(SensorConstants.DESCRIPTOR_HEART_RATE);
             MonitorSpecs.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            DeviceSocket.writeDescriptor(MonitorSpecs);
+            SelectedSocket.writeDescriptor(MonitorSpecs);
         }
      }
 

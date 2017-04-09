@@ -5,8 +5,7 @@ package lib.core.heartspy;
  */
 
 public interface ServiceCommands {
-    void StartSearch();
-    void StopSearch();
-
-
+    void SearchSensor();
+    void Stop();
+    void Query();
 }

@@ -18,7 +18,7 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
     private ServiceAccess SensorService = null;
     private PermissionCollection Permissions = new PermissionCollection();
 
-    private boolean SearchingForSensor = false;
+    private boolean ServiceStandby = true;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +58,8 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
         Log.d(LogTag, "Managing Click request...");
 
         if (SensorService == null) return;
-        SensorService.StartSearch();
+        if (ServiceStandby) SensorService.SearchSensor();
+        else SensorService.Stop();
     }
 
     /************************************************************************
@@ -71,8 +72,12 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
 
     @Override
     public void StateChanged(int State) {
+        if (State == Constants.ServiceWaiting) {
+            VisualIndicator.setConnectionState(false);
+            ServiceStandby = true;
+        }
+        if (State == Constants.ServiceSearching) ServiceStandby = false;
         if (State == Constants.ServiceRunning) VisualIndicator.setConnectionState(true);
-        else VisualIndicator.setConnectionState(false);
     }
     /************************************************************************
      * Managing requested permissions at runtime
@@ -105,12 +110,15 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
         SensorService = (ServiceAccess)service;
         Log.d(LogTag, "Connected to SensorProvider");
         SensorService.RegisterListener(this);
+        SensorService.Query();
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
         SensorService = null;
         Log.d(LogTag, "Disconnected from SensorProvider");
+        VisualIndicator.setConnectionState(false);
+        ServiceStandby = true;
     }
 
 }

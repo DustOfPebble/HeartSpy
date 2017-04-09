@@ -13,8 +13,9 @@ public class ServiceAccess extends Binder {
     public void RegisterProvider(ServiceCommands Provider) { Service = Provider; }
     public void RegisterListener(UpdateEvents Listener) { Updater = Listener; }
 
-    public void StartSearch() { Service.StartSearch(); }
-    public void StopSearch() { Service.StopSearch(); }
+    public void SearchSensor() { Service.SearchSensor(); }
+    public void Stop() { Service.Stop(); }
+    public void Query() { Service.Query(); }
 
     public void Update(int Value) {
         try { Updater.Update(Value);}
