@@ -18,6 +18,8 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
     private ServiceAccess SensorService = null;
     private PermissionCollection Permissions = new PermissionCollection();
 
+    private boolean SearchingForSensor = false;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -35,7 +37,6 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
             Permissions.Next();
             Requested = Permissions.Selected();
         }
-
         String[] NotGrantedPermissions = Permissions.NotGranted();
         if (NotGrantedPermissions.length > 0) requestPermissions(NotGrantedPermissions,0);
         else StartComponents();
