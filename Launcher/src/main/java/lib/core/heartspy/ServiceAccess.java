@@ -22,6 +22,7 @@ public class ServiceAccess extends Binder {
     }
 
     public void StateChanged(int State) {
+        Updater.StateChanged(State);
         try {Updater.StateChanged(State); }
         catch (Exception Failed) { Log.d(LogTag, "Failed on StateChanged event");}
     }

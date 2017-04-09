@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.animation.LinearInterpolator;
@@ -21,7 +22,7 @@ import android.widget.ImageView;
 public class BeatIndicator extends ImageView implements Runnable {
 
     private String LogTag = this.getClass().getSimpleName();
-    private Handler Synchronized = new Handler();
+    private Handler Synchronized = null;
     public int WidthToHeightFactor = 1;
 
     private Bitmap Sensor_NotConnected_Background;
@@ -56,12 +57,15 @@ public class BeatIndicator extends ImageView implements Runnable {
         TextPainter.setTextAlign(Paint.Align.CENTER);
         TextPainter.setColor(Color.parseColor("#aaccffff"));
         TextPainter.setTypeface(Typeface.DEFAULT_BOLD);
+
+        Synchronized = new Handler(Looper.getMainLooper());
     }
 
     public void setHeartRate(int Value){
         Frequency = Value;
         Log.d(LogTag, "Displayed value is "+Frequency);
-        if (Connected) Synchronized.post(this);
+        if (!Connected) return;
+        Synchronized.post(this);
         invalidate();
     }
 
