@@ -18,14 +18,12 @@ public class SensorDetector extends ScanCallback implements Runnable {
 
     private int TimeOut = 1000; // default TimeOut in ms ...
     private Handler TriggerEvent;
-    private Runnable TerminateSearch;
-    private SensorEvents SensorNotify;
+    private SensorEvents SensorHandler;
     private BluetoothLeScanner DeviceScanner;
     private Boolean isScanning = false;
 
     public SensorDetector(SensorEvents Callback, int  TimeOut) {
-        SensorNotify = Callback;
-        TerminateSearch = this;
+        SensorHandler = Callback;
         TriggerEvent = new Handler();
         if (TimeOut > 1000) this.TimeOut = TimeOut;
         DeviceScanner = BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
@@ -35,7 +33,7 @@ public class SensorDetector extends ScanCallback implements Runnable {
     public void startSearch(){
         DeviceScanner.startScan(this);
         isScanning = true;
-        if (TimeOut != 0) TriggerEvent.postDelayed(TerminateSearch, TimeOut);
+        if (TimeOut != 0) TriggerEvent.postDelayed(this, TimeOut);
         Log.d(LogTag, "Start scanning for "+TimeOut+" ms");
     }
 
@@ -43,10 +41,10 @@ public class SensorDetector extends ScanCallback implements Runnable {
     public void run() {
         if (!isScanning) return;
         isScanning = false;
-        Log.d(LogTag, "Scanning reached TimeOut limit");
         DeviceScanner.stopScan(this);
         DeviceScanner.flushPendingScanResults(this);
-        SensorNotify.Failed();
+        SensorHandler.Failed();
+        Log.d(LogTag, "Scanning reached TimeOut limit");
     }
 
     // Stop scanning on Request...
@@ -54,15 +52,17 @@ public class SensorDetector extends ScanCallback implements Runnable {
         isScanning = false;
         DeviceScanner.stopScan(this);
         DeviceScanner.flushPendingScanResults(this);
-        Log.d(LogTag, "End scanning on Listener request");
+        SensorHandler.Failed();
+        TriggerEvent.removeCallbacks(this);
+        Log.d(LogTag, "Scanning requested to stop");
     }
 
     @Override
     public void onScanResult(int callbackType, ScanResult Infos) {
          BluetoothDevice SensorDevice = Infos.getDevice();
         if (SensorDevice != null ) {
-            Log.d(LogTag, "Device detected --> Forwarding device to Listener");
-            SensorNotify.Detected(SensorDevice);
+            Log.d(LogTag, "Device detected --> Forwarding device to device Manager");
+            SensorHandler.Detected(SensorDevice);
         }
     }
 

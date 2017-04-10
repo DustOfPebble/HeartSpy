@@ -43,7 +43,7 @@ public class BeatIndicator extends ImageView implements Runnable {
     private float ScaleFactor = 0.0f;
 
     private int Frequency = 0;
-    private boolean Connected = false;
+    private int OperateMode = Constants.ServiceWaiting;
 
     public BeatIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -63,13 +63,11 @@ public class BeatIndicator extends ImageView implements Runnable {
 
     public void setHeartRate(int Value){
         Frequency = Value;
-        if (!Connected) return;
         Synchronized.post(this);
     }
 
-    public void setConnectionState(Boolean State){
-        Log.d(LogTag, "Sensor is "+(Connected? "connected":"disconnected"));
-        Connected = State;
+    public void setMode(int State){
+        OperateMode = State;
         Synchronized.post(this);
     }
 
@@ -94,7 +92,7 @@ public class BeatIndicator extends ImageView implements Runnable {
     }
 
     void LoadAnimation() { //Redefine Animation
-        float[] KeyValues = {0.80f,1.00f,0.80f};
+        float[] KeyValues = {1.00f,0.80f,0.90f,1.00f};
         ScaleAnimated = ObjectAnimator.ofFloat(this, "ScaleFactor", KeyValues);
         ScaleAnimated.setDuration(300);
         ScaleAnimated.setStartDelay(0);
@@ -123,7 +121,7 @@ public class BeatIndicator extends ImageView implements Runnable {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (Connected) {
+        if (OperateMode == Constants.ServiceRunning) {
             // Draw image Background
             canvas.drawBitmap(Sensor_Connected_Background, 0f, 0f, null);
 
@@ -134,10 +132,17 @@ public class BeatIndicator extends ImageView implements Runnable {
             canvas.drawPaint(ShaderPainter);
 
             // Write Heart Rate ...
-            canvas.drawText(Integer.toString(Frequency),canvas.getWidth() / 2, canvas.getHeight() / 2 ,TextPainter);
+            canvas.drawText(Integer.toString(Frequency), canvas.getWidth() / 2, canvas.getHeight() / 2, TextPainter);
+        }
 
-        } else {
+        if (OperateMode == Constants.ServiceSearching) {
             canvas.drawBitmap(Sensor_NotConnected_Background, 0f, 0f, null);
+            canvas.drawText("?", canvas.getWidth() / 2, canvas.getHeight() / 2, TextPainter);
+        }
+
+        if (OperateMode == Constants.ServiceWaiting) {
+            canvas.drawBitmap(Sensor_NotConnected_Background, 0f, 0f, null);
+            canvas.drawText("!", canvas.getWidth() / 2, canvas.getHeight() / 2, TextPainter);
         }
         super.onDraw(canvas);
     }

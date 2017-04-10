@@ -133,7 +133,6 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
         return START_STICKY;
     }
 
-    // Binding to this service is not offered ...
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(LogTag, "Binding service ...");
@@ -148,7 +147,7 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
     }
 
     /**************************************************************
-     *  Callbacks implementation for Incoming messages
+     *  Callbacks implementation for incoming messages
      **************************************************************/
     @Override
     public void SearchSensor() {
@@ -166,11 +165,11 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
             SensorFinder.stopSearch();
             ServiceStatus = Constants.ServiceWaiting;
             PushSystemNotification();
+            Connector.StateChanged(ServiceStatus);
         }
         if (ServiceStatus == Constants.ServiceRunning) {
             SensorListener.disconnect();
         }
-
     }
 
     @Override

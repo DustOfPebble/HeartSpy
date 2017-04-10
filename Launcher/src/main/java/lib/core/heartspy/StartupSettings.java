@@ -18,7 +18,7 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
     private ServiceAccess SensorService = null;
     private PermissionCollection Permissions = new PermissionCollection();
 
-    private boolean ServiceStandby = true;
+    private int ServiceMode = Constants.ServiceWaiting;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +26,7 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
         // Get Instance of used HMI objects
         setContentView(R.layout.startup_settings);
         VisualIndicator = (BeatIndicator) findViewById(R.id.beat_indicator);
-        VisualIndicator.setConnectionState(false);
+        VisualIndicator.setMode(ServiceMode);
         VisualIndicator.setHeartRate(0);
         VisualIndicator.setOnClickListener(this);
 
@@ -50,7 +50,9 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
         bindService(ServiceStarter, this, 0);
     }
 
-    // Manage Click on the BeatIndicator
+    /************************************************************************
+     * Handler Callback to manage Click from HMI
+     * **********************************************************************/
     @Override
     public void onClick(View Widget) {
         if (Widget == null) return;
@@ -58,7 +60,7 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
         Log.d(LogTag, "Managing Click request...");
 
         if (SensorService == null) return;
-        if (ServiceStandby) SensorService.SearchSensor();
+        if (ServiceMode == Constants.ServiceWaiting ) SensorService.SearchSensor();
         else SensorService.Stop();
     }
 
@@ -72,12 +74,8 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
 
     @Override
     public void StateChanged(int State) {
-        if (State == Constants.ServiceWaiting) {
-            VisualIndicator.setConnectionState(false);
-            ServiceStandby = true;
-        }
-        if (State == Constants.ServiceSearching) ServiceStandby = false;
-        if (State == Constants.ServiceRunning) VisualIndicator.setConnectionState(true);
+        ServiceMode = State;
+        VisualIndicator.setMode(ServiceMode);
     }
     /************************************************************************
      * Managing requested permissions at runtime
@@ -117,8 +115,8 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
     public void onServiceDisconnected(ComponentName name) {
         SensorService = null;
         Log.d(LogTag, "Disconnected from SensorProvider");
-        VisualIndicator.setConnectionState(false);
-        ServiceStandby = true;
+        ServiceMode = Constants.ServiceWaiting;
+        VisualIndicator.setMode(ServiceMode);
     }
 
 }

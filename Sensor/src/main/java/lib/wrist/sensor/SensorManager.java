@@ -23,7 +23,7 @@ public class SensorManager extends BluetoothGattCallback{
 
     public SensorManager(SensorEvents Listener, Context context){
         SensorListener = Listener;
-        this.SavedContext = context;
+        SavedContext = context;
     }
 
     public void checkDevice(BluetoothDevice Sensor){
@@ -33,23 +33,24 @@ public class SensorManager extends BluetoothGattCallback{
     }
 
     public void disconnect() {
+        if (SelectedSocket == null ) return;
         SelectedSocket.disconnect();
     }
-    /********************************************************************************************
-     * Callback implematation for Bluetooth GATT
-     *********************************************************************************************/
 
+    /********************************************************************************************
+     * Callback implementation for Bluetooth GATT
+     *********************************************************************************************/
     @Override
     public void onConnectionStateChange(BluetoothGatt DeviceSocket, int status, int newState) {
         if (newState == BluetoothProfile.STATE_CONNECTED) {
             DeviceSocket.discoverServices();
-            Log.d(LogTag, "Connected to Device server --> Starting Services discovery");
+            Log.d(LogTag, "Connected to Device --> Starting Services discovery");
             return;
         }
         if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             BluetoothDevice DisconnectedDevice = DeviceSocket.getDevice();
             DeviceSocket.close();
-            if (DisconnectedDevice != SelectedSensor) { Log.d(LogTag, "Unselected Device has disconnected..."); return;}
+            if (DisconnectedDevice != SelectedSensor) return;
             SensorListener.Removed();
             SelectedSensor = null;
             SelectedSocket = null;
@@ -61,17 +62,17 @@ public class SensorManager extends BluetoothGattCallback{
     @Override
     public void onServicesDiscovered(BluetoothGatt DeviceSocket, int status) {
         if (status == BluetoothGatt.GATT_SUCCESS) {
-            Log.d(LogTag, "Services discovered --> Checking for matching service");
+            Log.d(LogTag, "Services on Device discovered --> Checking for matching service");
             BluetoothGattService DeviceService = DeviceSocket.getService(SensorConstants.SERVICE_HEART_RATE);
             if ( DeviceService == null ) {
                 DeviceSocket.disconnect();
                 Log.d(LogTag, "Device not providing expected service --> Disconnecting");
                 return;
             }
-            Log.d(LogTag, "Matching Device server found --> Configuring device");
             SensorListener.Selected();
             SelectedSocket = DeviceSocket;
             SelectedSensor = SelectedSocket.getDevice();
+            Log.d(LogTag, "Matching service found on device:"+SelectedSensor.getAddress()+" --> Configuring device");
 
             BluetoothGattCharacteristic Monitor = DeviceService.getCharacteristic(SensorConstants.CHARACTERISTIC_HEART_RATE);
             SelectedSocket.setCharacteristicNotification(Monitor,true);
