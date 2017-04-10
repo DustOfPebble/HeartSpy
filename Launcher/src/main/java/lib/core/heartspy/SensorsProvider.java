@@ -10,9 +10,11 @@ import android.os.IBinder;
 import android.util.Log;
 
 import lib.events.SensorEvents;
+import lib.service.ServiceAccess;
+import lib.service.ServiceCommands;
+import lib.service.ServiceState;
 import lib.wrist.sensor.SensorDetector;
 import lib.wrist.sensor.SensorManager;
-
 
 public class SensorsProvider extends Service implements SensorEvents, ServiceCommands {
 
@@ -29,7 +31,7 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
 
     private ServiceAccess Connector=null;
 
-    private int ServiceStatus = Constants.ServiceWaiting;
+    private int ServiceStatus = ServiceState.Waiting;
     private Bundle SensorSnapshot = null;
 
     public SensorsProvider(){
@@ -39,9 +41,9 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
 
     private void PushSystemNotification() {
         int  Info = -1;
-        if (ServiceStatus == Constants.ServiceWaiting) Info = R.string.WaitingMode;
-        if (ServiceStatus == Constants.ServiceRunning) Info = R.string.RunningMode;
-        if (ServiceStatus == Constants.ServiceSearching) Info = R.string.SearchingMode;
+        if (ServiceStatus == ServiceState.Waiting) Info = R.string.WaitingMode;
+        if (ServiceStatus == ServiceState.Running) Info = R.string.RunningMode;
+        if (ServiceStatus == ServiceState.Searching) Info = R.string.SearchingMode;
 
         InfoCreator.setContentText(getText(Info));
         InfoProvider.notify(R.string.ID,InfoCreator.build());
@@ -57,7 +59,7 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
     @Override
     public void Updated(int Value) {
         SensorSnapshot.clear();
-        SensorSnapshot.putInt(Constants.SensorValue, Value);
+        SensorSnapshot.putInt(SensorStateKeys.UpdatingValue, Value);
         Watch.push(SensorSnapshot);
 
         Connector.Update(Value);
@@ -72,37 +74,37 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
     public void Selected(){
         SensorFinder.stopSearch();
 
-        ServiceStatus = Constants.ServiceRunning;
+        ServiceStatus = ServiceState.Running;
         PushSystemNotification();
 
         Connector.StateChanged(ServiceStatus);
 
         SensorSnapshot.clear();
-        SensorSnapshot.putBoolean(Constants.SensorSelected, true);
+        SensorSnapshot.putBoolean(SensorStateKeys.isSelected, true);
         Watch.push(SensorSnapshot);
     }
 
     @Override
     public void Failed(){
-        ServiceStatus = Constants.ServiceWaiting;
+        ServiceStatus = ServiceState.Waiting;
         PushSystemNotification();
 
         Connector.StateChanged(ServiceStatus);
 
         SensorSnapshot.clear();
-        SensorSnapshot.putBoolean(Constants.SensorSelected, false);
+        SensorSnapshot.putBoolean(SensorStateKeys.isSelected, false);
         Watch.push(SensorSnapshot);
     }
 
     @Override
     public void Removed(){
-        ServiceStatus = Constants.ServiceWaiting;
+        ServiceStatus = ServiceState.Waiting;
         PushSystemNotification();
 
         Connector.StateChanged(ServiceStatus);
 
         SensorSnapshot.clear();
-        SensorSnapshot.putBoolean(Constants.SensorSelected, false);
+        SensorSnapshot.putBoolean(SensorStateKeys.isSelected, false);
         Watch.push(SensorSnapshot);
     }
 
@@ -151,9 +153,9 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
      **************************************************************/
     @Override
     public void SearchSensor() {
-        if (ServiceStatus == Constants.ServiceSearching) return;
+        if (ServiceStatus == ServiceState.Searching) return;
         SensorFinder.startSearch();
-        ServiceStatus = Constants.ServiceSearching;
+        ServiceStatus = ServiceState.Searching;
         PushSystemNotification();
 
         Connector.StateChanged(ServiceStatus);
@@ -161,13 +163,13 @@ public class SensorsProvider extends Service implements SensorEvents, ServiceCom
 
     @Override
     public void Stop() {
-        if (ServiceStatus == Constants.ServiceSearching) {
+        if (ServiceStatus == ServiceState.Searching) {
             SensorFinder.stopSearch();
-            ServiceStatus = Constants.ServiceWaiting;
+            ServiceStatus = ServiceState.Waiting;
             PushSystemNotification();
             Connector.StateChanged(ServiceStatus);
         }
-        if (ServiceStatus == Constants.ServiceRunning) {
+        if (ServiceStatus == ServiceState.Running) {
             SensorListener.disconnect();
         }
     }

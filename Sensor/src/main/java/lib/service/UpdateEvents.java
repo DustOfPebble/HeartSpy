@@ -1,4 +1,4 @@
-package lib.core.heartspy;
+package lib.service;
 
 public interface UpdateEvents {
     void Update(int Value);

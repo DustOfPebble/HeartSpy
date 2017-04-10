@@ -1,4 +1,4 @@
-package lib.core.heartspy;
+package lib.service;
 
 public interface ServiceCommands {
     void SearchSensor();

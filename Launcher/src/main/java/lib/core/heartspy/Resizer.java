@@ -5,9 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 
-public class ToolBox {
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-
+public class Resizer {
 
     static public Bitmap getScaledBitmap(int Width, int Height, Resources EmbeddedDatas, int Id) {
 
@@ -22,9 +20,7 @@ public class ToolBox {
         int FittedWidth = (int) (IntrinsicWidth * ScalingFactor);
         int FittedHeight = (int) (IntrinsicHeight * ScalingFactor);
 
- //       Log.i("Bitmaps:", "Required["+Width+"x"+Height+"]--> Fitted["+FittedWidth+"x"+FittedHeight+"]");
-
-        // Calculate sub-sampling to minimize memory consumption
+         // Calculate sub-sampling to minimize memory consumption
         int SubSamplingFactor = Math.min(IntrinsicWidth / Width, IntrinsicHeight / Height);
 
         DecodingOptions.inJustDecodeBounds = false;
@@ -33,16 +29,5 @@ public class ToolBox {
         Bitmap SubSampledBitmap = BitmapFactory.decodeResource(EmbeddedDatas, Id, DecodingOptions);
 
         return Bitmap.createScaledBitmap(SubSampledBitmap, FittedWidth, FittedHeight, true);
-    }
-
-
-    public static String BytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
     }
 }

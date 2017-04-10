@@ -15,9 +15,10 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+
+import lib.service.ServiceState;
 
 public class BeatIndicator extends ImageView implements Runnable {
 
@@ -43,7 +44,7 @@ public class BeatIndicator extends ImageView implements Runnable {
     private float ScaleFactor = 0.0f;
 
     private int Frequency = 0;
-    private int OperateMode = Constants.ServiceWaiting;
+    private int OperateMode = ServiceState.Waiting;
 
     public BeatIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -78,9 +79,9 @@ public class BeatIndicator extends ImageView implements Runnable {
         StoredHeight = Height;
         StoredWidth = Width;
         Resources EmbeddedDatas = getContext().getResources();
-        Sensor_NotConnected_Background = ToolBox.getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.sensor_not_connected);
-        Sensor_Connected_Background = ToolBox.getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.sensor_connected);
-        Sensor_Heart_Pulsing = ToolBox.getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.heart_pulsing);
+        Sensor_NotConnected_Background = Resizer.getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.sensor_not_connected);
+        Sensor_Connected_Background = Resizer.getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.sensor_connected);
+        Sensor_Heart_Pulsing = Resizer.getScaledBitmap(StoredWidth, StoredHeight, EmbeddedDatas, R.drawable.heart_pulsing);
     }
 
     void LoadShader() { // Creating shader for Heart Scaling Animation ...
@@ -121,7 +122,7 @@ public class BeatIndicator extends ImageView implements Runnable {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (OperateMode == Constants.ServiceRunning) {
+        if (OperateMode == ServiceState.Running) {
             // Draw image Background
             canvas.drawBitmap(Sensor_Connected_Background, 0f, 0f, null);
 
@@ -135,12 +136,12 @@ public class BeatIndicator extends ImageView implements Runnable {
             canvas.drawText(Integer.toString(Frequency), canvas.getWidth() / 2, canvas.getHeight() / 2, TextPainter);
         }
 
-        if (OperateMode == Constants.ServiceSearching) {
+        if (OperateMode == ServiceState.Searching) {
             canvas.drawBitmap(Sensor_NotConnected_Background, 0f, 0f, null);
             canvas.drawText("?", canvas.getWidth() / 2, canvas.getHeight() / 2, TextPainter);
         }
 
-        if (OperateMode == Constants.ServiceWaiting) {
+        if (OperateMode == ServiceState.Waiting) {
             canvas.drawBitmap(Sensor_NotConnected_Background, 0f, 0f, null);
             canvas.drawText("!", canvas.getWidth() / 2, canvas.getHeight() / 2, TextPainter);
         }

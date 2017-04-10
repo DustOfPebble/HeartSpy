@@ -10,6 +10,10 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 
+import lib.service.ServiceAccess;
+import lib.service.ServiceState;
+import lib.service.UpdateEvents;
+
 public class StartupSettings extends Activity implements  View.OnClickListener,UpdateEvents,ServiceConnection {
 
     private String LogTag = this.getClass().getSimpleName();
@@ -18,7 +22,7 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
     private ServiceAccess SensorService = null;
     private PermissionCollection Permissions = new PermissionCollection();
 
-    private int ServiceMode = Constants.ServiceWaiting;
+    private int ServiceMode = ServiceState.Waiting;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +64,7 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
         Log.d(LogTag, "Managing Click request...");
 
         if (SensorService == null) return;
-        if (ServiceMode == Constants.ServiceWaiting ) SensorService.SearchSensor();
+        if (ServiceMode == ServiceState.Waiting) SensorService.SearchSensor();
         else SensorService.Stop();
     }
 
@@ -115,7 +119,7 @@ public class StartupSettings extends Activity implements  View.OnClickListener,U
     public void onServiceDisconnected(ComponentName name) {
         SensorService = null;
         Log.d(LogTag, "Disconnected from SensorProvider");
-        ServiceMode = Constants.ServiceWaiting;
+        ServiceMode = ServiceState.Waiting;
         VisualIndicator.setMode(ServiceMode);
     }
 

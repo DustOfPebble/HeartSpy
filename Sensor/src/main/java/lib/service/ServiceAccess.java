@@ -1,4 +1,4 @@
-package lib.core.heartspy;
+package lib.service;
 
 import android.os.Binder;
 import android.util.Log;

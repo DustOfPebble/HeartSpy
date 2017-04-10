@@ -23,5 +23,4 @@ android {
 dependencies {
     compile project(':Sensor')
     compile project(':Smartwatch')
-    compile project(':SensorEvents')
 }
