@@ -1,4 +1,4 @@
-package lib.core.heartspy;
+package core.launcher.heartspy;
 
 /*******************************************************************************
  *  Bundle Keys for encoding/decoding datas when using SmartwatchExtension

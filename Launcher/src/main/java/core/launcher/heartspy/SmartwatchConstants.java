@@ -1,4 +1,4 @@
-package lib.core.heartspy;
+package core.launcher.heartspy;
 
 /********************************************************************
  * Constants used to create dictionnary for sending to Smartwatch

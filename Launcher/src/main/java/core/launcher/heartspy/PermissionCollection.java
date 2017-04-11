@@ -1,4 +1,4 @@
-package lib.core.heartspy;
+package core.launcher.heartspy;
 
 import android.Manifest;
 import java.util.ArrayList;
