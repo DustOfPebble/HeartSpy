@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/home/xavier/Android.Projects/HeartSpy/SensorEvents/src/main/assets"/><source path="/home/xavier/Android.Projects/HeartSpy/SensorEvents/build/generated/assets/shaders/release"/></dataSet><dataSet config="release"><source path="/home/xavier/Android.Projects/HeartSpy/SensorEvents/src/release/assets"/></dataSet></merger>
