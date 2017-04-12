@@ -1,4 +1,4 @@
-package lib.core.heartspy;
+package core.launcher.heartspy;
 
 import android.app.Notification;
 import android.app.NotificationManager;

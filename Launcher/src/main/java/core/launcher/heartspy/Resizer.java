@@ -1,4 +1,4 @@
-package lib.core.heartspy;
+package core.launcher.heartspy;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

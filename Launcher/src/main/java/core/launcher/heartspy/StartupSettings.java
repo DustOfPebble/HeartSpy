@@ -1,4 +1,4 @@
-package lib.core.heartspy;
+package core.launcher.heartspy;
 
 import android.app.Activity;
 import android.content.ComponentName;

@@ -1,4 +1,4 @@
-package lib.core.heartspy;
+package core.launcher.heartspy;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
