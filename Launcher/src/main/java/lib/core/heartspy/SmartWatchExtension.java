@@ -30,7 +30,7 @@ public class SmartWatchExtension implements SmartwatchEvents {
         if (!isWatchConnected) return;
         for (String key : Values.keySet()) {
             if (key == SensorStateKeys.UpdatingValue)
-                DataSet.update(SmartwatchConstants.SensorValue, Values.getInt(key));
+                DataSet.update(SmartwatchConstants.SensorBeat, Values.getByte(key));
         }
         if (DataSet.size() == 0) return;
         WatchConnector.send(DataSet);
